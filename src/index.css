@@ -18,7 +18,7 @@
   /* Mobile parallax fallback */
   @media (max-width: 768px) {
     #home .parallax-bg {
-      position: fixed !important;
+      position: absolute !important;
       transform: none !important;
       background-attachment: scroll;
     }

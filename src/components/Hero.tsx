@@ -26,8 +26,17 @@ const Hero: React.FC = () => {
     const handleScroll = () => {
       if (backgroundRef.current) {
         const scrolled = window.pageYOffset;
-        const rate = scrolled * 0.5;
-        backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
+        const heroHeight = window.innerHeight;
+        
+        // Only apply parallax when in the hero section
+        if (scrolled < heroHeight) {
+          const rate = scrolled * 0.5; // Background moves slower than scroll
+          backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
+          backgroundRef.current.style.opacity = '1';
+        } else {
+          // Hide background when scrolled past hero
+          backgroundRef.current.style.opacity = '0';
+        }
       }
     };
 
@@ -51,6 +60,7 @@ const Hero: React.FC = () => {
           backgroundPosition: 'center',
           zIndex: 0,
           willChange: 'transform',
+          transition: 'opacity 0.3s ease-out',
         }}
       >
         {/* Overlay */}
