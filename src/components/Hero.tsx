@@ -18,15 +18,20 @@ const Hero: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Check if device supports parallax (not mobile)
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+    
+    if (isMobile || !backgroundRef.current) return;
+
     const handleScroll = () => {
       if (backgroundRef.current) {
         const scrolled = window.pageYOffset;
-        const rate = scrolled * -0.5; // Parallax speed
-        backgroundRef.current.style.transform = `translateY(${rate}px)`;
+        const rate = scrolled * 0.5;
+        backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -39,10 +44,10 @@ const Hero: React.FC = () => {
       {/* Parallax Background Image */}
       <div 
         ref={backgroundRef}
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+        className="parallax-bg absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
-          backgroundSize: 'contain',
+          backgroundSize: 'cover',
           backgroundPosition: 'center',
           zIndex: 0,
           willChange: 'transform',
