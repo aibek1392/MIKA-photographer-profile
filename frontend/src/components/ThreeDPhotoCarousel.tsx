@@ -163,7 +163,7 @@ const ThreeDPhotoCarousel: React.FC = () => {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxImage]);
+  }, [lightboxImage, nextLightboxImage, prevLightboxImage, closeLightbox]);
 
   const getCardStyle = (index: number) => {
     const offset = (index - currentIndex + posts.length) % posts.length;
