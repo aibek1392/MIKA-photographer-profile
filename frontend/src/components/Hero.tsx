@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter, Cursor } from 'react-simple-typewriter';
 import { ChevronDown } from 'lucide-react';
@@ -15,18 +15,37 @@ const Hero: React.FC = () => {
     delaySpeed: 2000,
   });
 
+  const backgroundRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (backgroundRef.current) {
+        const scrolled = window.pageYOffset;
+        const rate = scrolled * -0.5; // Parallax speed
+        backgroundRef.current.style.transform = `translateY(${rate}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Fixed Background Image */}
+      {/* Parallax Background Image */}
       <div 
-        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat bg-fixed"
+        ref={backgroundRef}
+        className="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
+          backgroundSize: 'contain',
+          backgroundPosition: 'center',
           zIndex: 0,
+          willChange: 'transform',
         }}
       >
         {/* Overlay */}
