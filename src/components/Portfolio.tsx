@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { FlipReveal, FlipRevealItem } from './FlipReveal';
 import { ToggleGroup, ToggleGroupItem } from './ToggleGroup';
 
 const Portfolio: React.FC = () => {
@@ -48,6 +47,10 @@ const Portfolio: React.FC = () => {
       },
     },
   };
+
+  const filteredImages = selectedCategory === 'all' 
+    ? images 
+    : images.filter(image => image.category === selectedCategory);
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
@@ -112,42 +115,44 @@ const Portfolio: React.FC = () => {
             }}
             className="w-full"
           >
-            <FlipReveal 
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" 
-              keys={[selectedCategory]} 
-              showClass="flex" 
-              hideClass="hidden"
-            >
-              {images.map((image, index) => (
-                <FlipRevealItem key={image.id} flipKey={image.category} index={index}>
-                  <motion.div
-                    className="group relative overflow-hidden rounded-lg cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800"
-                    whileHover={{ 
-                      scale: 1.02,
-                      transition: {
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 15
-                      }
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {filteredImages.map((image, index) => (
+                <motion.div
+                  key={image.id}
+                  className="group relative overflow-hidden rounded-lg cursor-pointer aspect-square bg-gray-100 dark:bg-gray-800"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  whileHover={{ 
+                    scale: 1.02,
+                    transition: {
+                      type: "spring",
+                      stiffness: 500,
+                      damping: 15
+                    }
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
+                    loading="lazy"
+                    onError={(e) => {
+                      console.error('Image failed to load:', image.src);
+                      e.currentTarget.style.display = 'none';
                     }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-end justify-start p-4">
-                      <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-200">
-                        <h3 className="text-white font-semibold text-lg mb-1">{image.title}</h3>
-                        <p className="text-white/80 text-sm capitalize">{image.category}</p>
-                      </div>
+                    onLoad={() => console.log('Image loaded:', image.src)}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-200 flex items-end justify-start p-4">
+                    <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-200">
+                      <h3 className="text-white font-semibold text-lg mb-1">{image.title}</h3>
+                      <p className="text-white/80 text-sm capitalize">{image.category}</p>
                     </div>
-                  </motion.div>
-                </FlipRevealItem>
+                  </div>
+                </motion.div>
               ))}
-            </FlipReveal>
+            </div>
           </motion.div>
         </AnimatePresence>
       </div>
