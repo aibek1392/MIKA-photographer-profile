@@ -85,16 +85,16 @@ const Portfolio: React.FC = () => {
             value={selectedCategory}
             onValueChange={handleCategoryChange}
           >
-            <ToggleGroupItem value="all" className="sm:px-4">
+            <ToggleGroupItem value="all">
               All
             </ToggleGroupItem>
-            <ToggleGroupItem value="weddings" className="sm:px-4">
+            <ToggleGroupItem value="weddings">
               Weddings
             </ToggleGroupItem>
-            <ToggleGroupItem value="portraits" className="sm:px-4">
+            <ToggleGroupItem value="portraits">
               Portraits
             </ToggleGroupItem>
-            <ToggleGroupItem value="events" className="sm:px-4">
+            <ToggleGroupItem value="events">
               Events
             </ToggleGroupItem>
           </ToggleGroup>

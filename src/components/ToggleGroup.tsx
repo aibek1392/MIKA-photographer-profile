@@ -25,7 +25,7 @@ export const ToggleGroup: React.FC<ToggleGroupProps> = ({
   children
 }) => {
   return (
-    <div className={`bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 p-1 ${className}`}>
+    <div className={`bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700 p-1 flex flex-wrap justify-center ${className}`}>
       {React.Children.map(children, (child) => {
         if (React.isValidElement(child) && child.type === ToggleGroupItem) {
           const isSelected = value === (child.props as ToggleGroupItemProps).value;
@@ -51,12 +51,12 @@ export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
   return (
     <motion.button
       onClick={onClick}
-      className={`px-4 py-2 rounded-md font-medium transition-all duration-300 text-sm sm:text-base ${className}`}
+      className={`px-2 sm:px-4 py-2 rounded-md font-medium transition-all duration-300 text-xs sm:text-sm md:text-base flex-shrink-0 ${className}`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
     >
       <motion.div
-        className={`relative px-3 py-2 rounded-md transition-all duration-300 ${
+        className={`relative px-2 sm:px-3 py-2 rounded-md transition-all duration-300 whitespace-nowrap ${
           isSelected
             ? 'bg-black dark:bg-white text-white dark:text-black shadow-md'
             : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
