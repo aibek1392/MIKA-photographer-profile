@@ -1,228 +1,201 @@
-# 📸 Mika Photography Website
+# Mika Photography Portfolio Website
 
-A modern, responsive photographer portfolio website built with React, TypeScript, and Tailwind CSS. Features a stunning 3D photo carousel, smooth animations, and professional design.
+A modern, mobile-first, responsive photographer portfolio website built with React, TypeScript, and Tailwind CSS.
 
 ## ✨ Features
 
-### 🎨 Design & UI
-- **Modern One-Page Layout**: Smooth scrolling sections (Home, About, Portfolio, Contact)
-- **Dark/Light Mode Toggle**: Persistent theme switching with system preference detection
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Professional Typography**: Custom fonts (Prata, Inter) and gradient text effects
-- **Sticky Navigation**: Glassy navbar with smooth animations
+- **One-page smooth-scroll layout** with sections for Home, About, Portfolio, and Contact
+- **Full-screen hero section** with animated background and typewriter effect
+- **Responsive photo gallery** with lightbox functionality and category filtering
+- **Sticky navigation** with smooth scrolling to sections
+- **Dark/light mode toggle** with persistent theme preference
+- **Mobile-friendly design** with hamburger menu for smaller screens
+- **Contact form** with validation and success feedback
+- **Social media integration** in footer
+- **Smooth animations** using Framer Motion
+- **SEO optimized** with proper meta tags and semantic HTML
+- **Performance optimized** with lazy loading images
 
-### 📸 Photography Showcase
-- **3D Photo Carousel**: Instagram feed with 3D perspective transforms
-- **Lightbox Gallery**: Click to zoom with keyboard navigation
-- **Portfolio Grid**: Animated flip reveal gallery with category filtering
-- **Image Auto Slider**: Smooth carousel with auto-play and controls
+## 🚀 Technologies Used
 
-### 🚀 Technical Features
-- **React 19** with TypeScript for type safety
-- **Framer Motion** for smooth animations and transitions
-- **Tailwind CSS** for utility-first styling
-- **React Intersection Observer** for scroll-triggered animations
-- **React Simple Typewriter** for hero text effects
-- **Lucide React** for consistent iconography
-
-### 📱 Interactive Elements
-- **Smooth Scrolling**: Navigation with scroll-to-section functionality
-- **Auto-play Controls**: Pause/play functionality with hover detection
-- **Touch Support**: Mobile-friendly interactions and gestures
-- **Keyboard Navigation**: Full accessibility support
-- **Social Media Integration**: Instagram and WhatsApp links
-
-## 🛠️ Tech Stack
-
-- **Frontend**: React 19, TypeScript
-- **Styling**: Tailwind CSS v3.4.0
-- **Animations**: Framer Motion
-- **Build Tool**: Create React App
-- **Icons**: Lucide React
-- **Fonts**: Google Fonts (Prata, Inter, Playfair Display)
+- **React 19** with TypeScript
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+- **React Intersection Observer** for scroll animations
+- **React Simple Typewriter** for typewriter effects
+- **Lucide React** for icons
 
 ## 📁 Project Structure
 
 ```
-MIKA_PHOTOGRAPHER_WEBSITE/
-├── frontend/
-│   ├── public/
-│   │   ├── photo_*.jpeg           # Photography portfolio images
-│   │   ├── favicon.svg            # Custom favicon
-│   │   └── index.html
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Hero.tsx           # Hero section with typewriter effect
-│   │   │   ├── About.tsx          # About section
-│   │   │   ├── Portfolio.tsx      # Portfolio with flip reveal
-│   │   │   ├── ThreeDPhotoCarousel.tsx # 3D Instagram carousel
-│   │   │   ├── ThreeDCarousel.tsx # Reusable 3D carousel component
-│   │   │   ├── InstagramFeed.tsx  # Instagram integration
-│   │   │   ├── Contact.tsx        # Contact section
-│   │   │   ├── Footer.tsx         # Footer with social links
-│   │   │   ├── Navigation.tsx     # Responsive navigation
-│   │   │   ├── FlipReveal.tsx     # Gallery animation component
-│   │   │   └── ToggleGroup.tsx    # UI component for filtering
-│   │   ├── App.tsx                # Main application
-│   │   ├── index.tsx              # React entry point
-│   │   └── index.css              # Global styles and Tailwind
-│   ├── package.json
-│   ├── tailwind.config.js
-│   └── postcss.config.js
-├── .gitignore
-└── README.md
+frontend/
+├── public/
+│   ├── index.html
+│   └── manifest.json
+├── src/
+│   ├── components/
+│   │   ├── About.tsx
+│   │   ├── Contact.tsx
+│   │   ├── Footer.tsx
+│   │   ├── Hero.tsx
+│   │   ├── Navigation.tsx
+│   │   └── Portfolio.tsx
+│   ├── App.tsx
+│   ├── index.tsx
+│   └── index.css
+├── tailwind.config.js
+├── postcss.config.js
+└── package.json
 ```
 
-## 🚀 Getting Started
+## 🎨 Design Features
 
-### Prerequisites
-- Node.js 16.x or higher
-- npm or yarn
+### Hero Section
+- Full-screen background image with overlay
+- Animated text with typewriter effect
+- Call-to-action buttons
+- Smooth scroll indicator
 
-### Installation
+### About Section
+- Personal introduction with animated stats
+- Fun facts about the photographer
+- Responsive grid layout
+
+### Portfolio Section
+- Filterable gallery by category (All, Weddings, Portraits, Events)
+- Lightbox functionality with navigation
+- Hover effects and smooth transitions
+- Lazy loading for performance
+
+### Contact Section
+- Contact form with validation
+- Business hours and contact information
+- Success feedback on form submission
+
+### Navigation & Footer
+- Sticky navigation with scroll effects
+- Mobile hamburger menu
+- Social media links
+- Back to top button
+
+## 🎯 Key Features
+
+### Responsive Design
+- Mobile-first approach
+- Breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px)
+- Optimized for all device sizes
+
+### Dark Mode
+- Toggle between light and dark themes
+- Persistent theme preference using localStorage
+- Smooth transitions between themes
+
+### Animations
+- Scroll-triggered animations using Intersection Observer
+- Smooth page transitions
+- Hover effects and micro-interactions
+- Staggered animations for lists and grids
+
+### Performance
+- Lazy loading images
+- Optimized bundle size
+- Preconnect to external domains
+- Semantic HTML for better SEO
+
+## 🛠️ Installation & Setup
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/aibek1392/MIKA-photographer-profile.git
-   cd MIKA-photographer-profile
+   git clone <repository-url>
+   cd frontend
    ```
 
---install all dependecies
 2. **Install dependencies**
    ```bash
-   cd frontend
    npm install
    ```
 
-3. **Start the development server**
+3. **Start development server**
    ```bash
    npm start
    ```
 
-4. **Open your browser**
-   Navigate to `http://localhost:3000`
+4. **Build for production**
+   ```bash
+   npm run build
+   ```
 
-### Build for Production
+## 📱 Mobile Features
 
-```bash
-npm run build
-```
-
-This creates an optimized production build in the `build` folder.
-
-## 🎯 Key Components
-
-### ThreeDCarousel
-Reusable 3D carousel component matching 21st.dev design:
-
-```tsx
-import { ThreeDCarousel, CarouselItem } from './ThreeDCarousel';
-
-const items: CarouselItem[] = [
-  {
-    id: 1,
-    imageUrl: '/path/to/image.jpg',
-    alt: 'Description',
-    title: 'Optional title',
-    description: 'Optional description'
-  }
-];
-
-<ThreeDCarousel
-  items={items}
-  autoPlay={true}
-  showNavigation={true}
-  onItemClick={(item, index) => console.log('Clicked:', item)}
-/>
-```
-
-### Portfolio Gallery
-Animated flip reveal with category filtering:
-
-```tsx
-<FlipReveal 
-  className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" 
-  keys={[selectedCategory]}
->
-  {images.map((image) => (
-    <FlipRevealItem key={image.id} flipKey={image.category}>
-      {/* Image content */}
-    </FlipRevealItem>
-  ))}
-</FlipReveal>
-```
+- Touch-friendly navigation
+- Swipe gestures for lightbox
+- Optimized touch targets
+- Responsive typography
+- Mobile-optimized forms
 
 ## 🎨 Customization
 
 ### Colors & Themes
-Modify `tailwind.config.js` to customize the color palette:
+The website uses Tailwind CSS with a custom color palette. You can modify colors in `tailwind.config.js`:
 
-```js
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        primary: '#your-color',
-        secondary: '#your-color',
-      }
+```javascript
+theme: {
+  extend: {
+    colors: {
+      // Add your custom colors here
     }
   }
 }
 ```
 
-### Fonts
-Update `src/index.css` to change fonts:
+### Content
+- Update personal information in component files
+- Replace placeholder images with actual photography work
+- Modify contact information and social media links
+- Customize business hours and services
 
-```css
-@import url('https://fonts.googleapis.com/css2?family=YourFont:wght@300;400;500;600;700&display=swap');
-```
+### Styling
+- Modify component styles in individual `.tsx` files
+- Update global styles in `src/index.css`
+- Customize animations in `tailwind.config.js`
 
-### Images
-Replace images in `public/` folder with your own photography:
-- Recommended size: 1200x800px or larger
-- Format: JPEG for photos, PNG for graphics
-- Optimize for web to ensure fast loading
+## 📸 Image Placeholders
 
-## 📱 Responsive Breakpoints
+The website currently uses Unsplash images as placeholders. Replace these with actual photography work:
 
-- **Mobile**: < 640px
-- **Tablet**: 640px - 1024px
-- **Desktop**: > 1024px
+1. **Hero Background**: Update the background image URL in `Hero.tsx`
+2. **Portfolio Images**: Replace image URLs in the `images` array in `Portfolio.tsx`
+3. **About Section**: Add personal photos as needed
 
-## 🔧 Performance Optimizations
+## 🔧 Configuration
 
-- **Lazy Loading**: Images load only when needed
-- **Optimized Animations**: 60fps smooth animations
-- **Code Splitting**: Components loaded on demand
-- **Image Optimization**: Compressed photos for fast loading
-- **Efficient Re-renders**: Optimized React hooks and memoization
+### Tailwind CSS
+The project is configured with Tailwind CSS v4. Custom animations and utilities are defined in `tailwind.config.js`.
+
+### Framer Motion
+Animation variants and transitions are defined in each component for optimal performance.
+
+### SEO
+Meta tags and Open Graph data are configured in `public/index.html` for better social media sharing.
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is open source and available under the [MIT License](LICENSE).
 
 ## 🤝 Contributing
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
 
-## 📞 Contact
+## 📞 Support
 
-**Mika Photography**
-- Instagram: [@mikavisionnyc](https://instagram.com/mikavisionnyc)
-- WhatsApp: [Send Message](https://wa.me/1234567890)
-
-## 🙏 Acknowledgments
-
-- [21st.dev](https://21st.dev) for design inspiration
-- [Framer Motion](https://www.framer.com/motion/) for animations
-- [Tailwind CSS](https://tailwindcss.com/) for styling
-- [Lucide](https://lucide.dev/) for icons
-- [Unsplash](https://unsplash.com/) for placeholder images
+For questions or support, please contact:
+- Email: hello@mikaphotography.com
+- Phone: +1 (555) 123-4567
 
 ---
 
-Built with ❤️ by Mika Photography
+**Note**: This is a template website. Replace all placeholder content, images, and contact information with actual photographer details before deployment.
