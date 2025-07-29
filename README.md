@@ -87,6 +87,7 @@ MIKA_PHOTOGRAPHER_WEBSITE/
    cd MIKA-photographer-profile
    ```
 
+--install all dependecies
 2. **Install dependencies**
    ```bash
    cd frontend
