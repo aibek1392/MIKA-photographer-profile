@@ -83,8 +83,8 @@ MIKA_PHOTOGRAPHER_WEBSITE/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/mika-photographer-website.git
-   cd mika-photographer-website
+   git clone https://github.com/aibek1392/MIKA-photographer-profile.git
+   cd MIKA-photographer-profile
    ```
 
 2. **Install dependencies**
@@ -224,4 +224,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-Built with ❤️ by Mika Photography 
+Built with ❤️ by Mika Photography
