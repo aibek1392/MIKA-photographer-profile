@@ -30,15 +30,39 @@ const InstagramFeed: React.FC = () => {
     },
   };
 
-  const instagramImages = [
-    '/photo_2025-07-25 13.56.46.jpeg',
-    '/photo_2025-07-25 13.56.42.jpeg',
-    '/photo_2025-07-25 13.56.39.jpeg',
-    '/photo_2025-07-25 13.56.36.jpeg',
-    '/photo_2025-07-25 13.56.32.jpeg',
-    '/photo_2025-07-25 13.56.25.jpeg',
-    '/photo_2025-07-25 13.56.22.jpeg',
-    '/photo_2025-07-25 13.56.17.jpeg',
+  const instagramItems = [
+    {
+      image: '/photo_2025-07-25 13.56.46.jpeg',
+      text: 'Elegant Wedding'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.42.jpeg',
+      text: 'Portrait Perfection'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.39.jpeg',
+      text: 'Corporate Events'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.36.jpeg',
+      text: 'Wedding Ceremony'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.32.jpeg',
+      text: 'Professional Headshots'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.25.jpeg',
+      text: 'Event Photography'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.22.jpeg',
+      text: 'Reception Memories'
+    },
+    {
+      image: '/photo_2025-07-25 13.56.17.jpeg',
+      text: 'Family Portraits'
+    },
   ];
 
   return (
@@ -66,12 +90,13 @@ const InstagramFeed: React.FC = () => {
           </motion.p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="w-full">
+        <motion.div variants={itemVariants} className="w-full h-[600px]">
           <CircularGallery 
-            images={instagramImages}
-            radius={250}
-            autoRotate={true}
-            autoRotateSpeed={0.3}
+            items={instagramItems}
+            bend={1.5}
+            textColor="#ffffff"
+            borderRadius={0.05}
+            font="bold 30px Inter"
           />
         </motion.div>
 
