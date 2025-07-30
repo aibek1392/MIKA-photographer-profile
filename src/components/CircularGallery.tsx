@@ -1,134 +1,135 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-
-interface GalleryItem {
-  id: number;
-  image: string;
-  text: string;
-}
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface CircularGalleryProps {
-  items: GalleryItem[];
-  bend?: number;
-  textColor?: string;
-  borderRadius?: number;
+  images: string[];
+  radius?: number;
+  autoRotate?: boolean;
+  autoRotateSpeed?: number;
 }
 
 const CircularGallery: React.FC<CircularGalleryProps> = ({
-  items,
-  bend = 3,
-  textColor = "#ffffff",
-  borderRadius = 0.05,
+  images,
+  radius = 200,
+  autoRotate = true,
+  autoRotateSpeed = 0.5
 }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+  const [currentAngle, setCurrentAngle] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isAutoRotating, setIsAutoRotating] = useState(autoRotate);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
+  const startAutoRotation = useCallback(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setCurrentAngle((prev) => prev + autoRotateSpeed);
+    }, 50);
+  }, [autoRotateSpeed]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+  const stopAutoRotation = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAutoRotating && !isHovered) {
+      startAutoRotation();
+    } else {
+      stopAutoRotation();
+    }
+
+    return () => stopAutoRotation();
+  }, [isAutoRotating, isHovered, startAutoRotation, stopAutoRotation]);
+
+  const nextImage = () => {
+    setCurrentAngle((prev) => prev + (360 / images.length));
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.6,
-      },
-    },
+  const prevImage = () => {
+    setCurrentAngle((prev) => prev - (360 / images.length));
   };
 
-  const calculatePosition = (index: number, total: number) => {
-    const angle = (index / total) * 2 * Math.PI;
-    const radius = 350; // Increased radius to accommodate all images
+  const getImagePosition = (index: number) => {
+    const angle = (360 / images.length) * index + currentAngle;
+    const radian = (angle * Math.PI) / 180;
+    const x = Math.cos(radian) * radius;
+    const y = Math.sin(radian) * radius;
+    const z = Math.cos(radian) * radius * 0.5;
     
-    const x = Math.cos(angle) * radius;
-    const y = Math.sin(angle) * radius;
-    
-    // Apply bend effect
-    const bendFactor = bend;
-    const bentY = y * (1 + Math.abs(x) / 1000 * bendFactor);
-    
-    return { x: x, y: bentY };
+    return { x, y, z, angle };
   };
 
-  const handleItemClick = (item: GalleryItem) => {
-    setSelectedItem(item);
+  const openLightbox = (image: string) => {
+    setSelectedImage(image);
   };
 
-  const closeModal = () => {
-    setSelectedItem(null);
+  const closeLightbox = () => {
+    setSelectedImage(null);
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-black">
-      <motion.div
-        ref={ref}
-        variants={containerVariants}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
+    <div className="relative w-full h-[600px] flex items-center justify-center overflow-hidden">
+      {/* Circular Gallery Container */}
+      <div
         className="relative w-full h-full flex items-center justify-center"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
       >
-        {/* Circular Gallery Items */}
-        {items.map((item, index) => {
-          const position = calculatePosition(index, items.length);
+        {/* Center Point */}
+        <div className="absolute w-4 h-4 bg-white rounded-full shadow-lg z-10" />
+        
+        {/* Images */}
+        {images.map((image, index) => {
+          const position = getImagePosition(index);
+          const isFront = Math.abs(position.angle % 360) < 90 || Math.abs(position.angle % 360) > 270;
           
           return (
             <motion.div
-              key={item.id}
-              variants={itemVariants}
+              key={index}
+              className="absolute cursor-pointer"
               style={{
-                position: 'absolute',
-                left: '50%',
-                top: '50%',
-                transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px)`,
-                zIndex: index === 0 ? 10 : 1,
+                x: position.x,
+                y: position.y,
+                z: position.z,
+                transformStyle: 'preserve-3d',
               }}
-              whileHover={{ 
-                scale: 1.15,
-                zIndex: 20,
+              animate={{
+                x: position.x,
+                y: position.y,
+                z: position.z,
+                scale: isFront ? 1 : 0.8,
+                opacity: isFront ? 1 : 0.6,
               }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleItemClick(item)}
-              className="cursor-pointer group"
+              transition={{
+                type: "spring",
+                stiffness: 100,
+                damping: 20,
+                mass: 0.5,
+              }}
+              whileHover={{
+                scale: 1.1,
+                z: position.z + 50,
+                transition: { duration: 0.2 }
+              }}
+              onClick={() => openLightbox(image)}
             >
-              {/* Image Container */}
-              <div 
-                className="relative overflow-hidden rounded-lg shadow-2xl"
-                style={{
-                  borderRadius: `${borderRadius * 100}%`,
-                  width: '140px',
-                  height: '105px',
-                }}
-              >
+              <div className="relative group">
                 <img
-                  src={item.image}
-                  alt={item.text}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  src={image}
+                  alt={`Gallery image ${index + 1}`}
+                  className="w-32 h-32 md:w-40 md:h-40 object-cover rounded-lg shadow-lg border-2 border-white/20"
+                  style={{
+                    transform: `rotateY(${position.angle}deg)`,
+                  }}
                 />
-                
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <div className="text-center">
-                    <h3 
-                      className="text-sm font-semibold mb-1"
-                      style={{ color: textColor }}
-                    >
-                      {item.text}
-                    </h3>
-                    <div className="text-xs opacity-80" style={{ color: textColor }}>
-                      Click to view
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 rounded-lg transition-all duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full" />
                     </div>
                   </div>
                 </div>
@@ -136,51 +137,70 @@ const CircularGallery: React.FC<CircularGalleryProps> = ({
             </motion.div>
           );
         })}
-      </motion.div>
+      </div>
 
-      {/* Modal for Selected Item */}
+      {/* Navigation Controls */}
+      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
+        <motion.button
+          onClick={prevImage}
+          className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <ChevronLeft size={20} />
+        </motion.button>
+        
+        <motion.button
+          onClick={() => setIsAutoRotating(!isAutoRotating)}
+          className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+            isAutoRotating 
+              ? 'bg-white/20 text-white' 
+              : 'bg-white/10 text-white/70 hover:bg-white/20'
+          }`}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {isAutoRotating ? 'Pause' : 'Play'}
+        </motion.button>
+        
+        <motion.button
+          onClick={nextImage}
+          className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/20 transition-all duration-300"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <ChevronRight size={20} />
+        </motion.button>
+      </div>
+
+      {/* Lightbox */}
       <AnimatePresence>
-        {selectedItem && (
+        {selectedImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-            onClick={closeModal}
+            className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+            onClick={closeLightbox}
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative max-w-4xl max-h-[90vh] overflow-hidden rounded-xl"
+              className="relative max-w-4xl max-h-full"
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src={selectedItem.image}
-                alt={selectedItem.text}
-                className="w-full h-full object-contain"
-              />
-              
-              {/* Close Button */}
               <button
-                onClick={closeModal}
-                className="absolute top-4 right-4 w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors duration-200"
+                onClick={closeLightbox}
+                className="absolute -top-12 right-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <X size={20} />
               </button>
-              
-              {/* Image Title */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                <h3 
-                  className="text-2xl font-bold"
-                  style={{ color: textColor }}
-                >
-                  {selectedItem.text}
-                </h3>
-              </div>
+              <img
+                src={selectedImage}
+                alt="Selected image"
+                className="max-w-full max-h-[80vh] object-contain rounded-lg"
+              />
             </motion.div>
           </motion.div>
         )}
