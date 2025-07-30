@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import {
   Renderer,
   Camera,
@@ -581,6 +581,39 @@ class App {
     this.scroll.target = this.scroll.target < 0 ? -item : item;
   }
 
+  findClickedImage(x: number, y: number): number {
+    if (!this.medias || !this.medias.length) return -1;
+    
+    // Convert screen coordinates to normalized device coordinates
+    const normalizedX = (x / this.screen.width) * 2 - 1;
+    const normalizedY = -(y / this.screen.height) * 2 + 1;
+    
+    // Find the closest image to the click position
+    let closestIndex = -1;
+    let closestDistance = Infinity;
+    
+    this.medias.forEach((media, index) => {
+      const imageX = media.plane.position.x;
+      const imageY = media.plane.position.y;
+      
+      // Convert to screen space
+      const screenX = (imageX / this.viewport.width) * 2;
+      const screenY = (imageY / this.viewport.height) * 2;
+      
+      const distance = Math.sqrt(
+        Math.pow(normalizedX - screenX, 2) + 
+        Math.pow(normalizedY - screenY, 2)
+      );
+      
+      if (distance < closestDistance && distance < 0.5) { // Threshold for click detection
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+    
+    return closestIndex;
+  }
+
   onResize() {
     this.screen = {
       width: this.container.clientWidth,
@@ -672,8 +705,12 @@ const CircularGallery = ({
   font = "bold 30px DM Sans",
 }: CircularGalleryProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedText, setSelectedText] = useState<string>("");
+
   useEffect(() => {
     if (!containerRef.current) return;
+    
     const app = new App(containerRef.current, {
       items,
       bend,
@@ -681,16 +718,88 @@ const CircularGallery = ({
       borderRadius,
       font,
     });
+
+    // Add click event listener to the canvas
+    const canvas = containerRef.current.querySelector('canvas');
+    if (canvas) {
+      const handleCanvasClick = (event: MouseEvent) => {
+        const rect = canvas.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        // Find which image was clicked based on position
+        const imageIndex = app.findClickedImage(x, y);
+        if (imageIndex !== -1 && items && items[imageIndex]) {
+          setSelectedImage(items[imageIndex].image);
+          setSelectedText(items[imageIndex].text);
+        }
+      };
+      
+      canvas.addEventListener('click', handleCanvasClick);
+      
+      return () => {
+        canvas.removeEventListener('click', handleCanvasClick);
+        app.destroy();
+      };
+    }
+    
     return () => {
       app.destroy();
     };
   }, [items, bend, textColor, borderRadius, font]);
+
+  const closeLightbox = () => {
+    setSelectedImage(null);
+    setSelectedText("");
+  };
+
+  const handleKeyDown = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closeLightbox();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
   
   return (
-    <div
-      className="w-full h-full overflow-hidden cursor-grab active:cursor-grabbing bg-transparent"
-      ref={containerRef}
-    />
+    <div className="relative w-full h-full">
+      <div
+        className="w-full h-full overflow-hidden cursor-pointer bg-transparent"
+        ref={containerRef}
+      />
+      
+      {/* Lightbox */}
+      {selectedImage && (
+        <div 
+          className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+          onClick={closeLightbox}
+        >
+          <div 
+            className="relative max-w-4xl max-h-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeLightbox}
+              className="absolute -top-12 right-0 w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-all duration-300"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img
+              src={selectedImage}
+              alt="Selected image"
+              className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl"
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
