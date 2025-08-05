@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter, Cursor } from 'react-simple-typewriter';
 import { ChevronDown } from 'lucide-react';
@@ -18,37 +18,9 @@ const Hero: React.FC = () => {
 
 
 
-  const backgroundRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
-  useEffect(() => {
-    // Detect mobile devices
-    const checkMobile = () => {
-      const mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      setIsMobile(mobile);
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
 
-  useEffect(() => {
-    // Mobile parallax fallback
-    if (!isMobile || !backgroundRef.current) return;
 
-    const handleScroll = () => {
-      if (backgroundRef.current) {
-        const scrolled = window.pageYOffset;
-        const rate = scrolled * 0.3;
-        backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile]);
 
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
@@ -58,14 +30,13 @@ const Hero: React.FC = () => {
     <section id="home" className="relative h-screen overflow-hidden">
       {/* Fixed Background Image */}
       <div 
-        ref={backgroundRef}
         className="absolute inset-0 w-full h-full"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center 20%',
           backgroundRepeat: 'no-repeat',
-          backgroundAttachment: isMobile ? 'scroll' : 'fixed',
+          backgroundAttachment: 'scroll',
           zIndex: 0,
         }}
       >
