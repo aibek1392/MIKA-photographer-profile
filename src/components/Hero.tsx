@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter, Cursor } from 'react-simple-typewriter';
 import { ChevronDown } from 'lucide-react';
@@ -22,6 +22,21 @@ const Hero: React.FC = () => {
 
 
 
+  const backgroundRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (backgroundRef.current) {
+        const scrolled = window.pageYOffset;
+        // Move background in opposite direction to create "fixed" effect
+        backgroundRef.current.style.transform = `translateY(${scrolled * -1}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -30,14 +45,16 @@ const Hero: React.FC = () => {
     <section id="home" className="relative h-screen overflow-hidden">
       {/* Fixed Background Image */}
       <div 
-        className="absolute inset-0 w-full h-full"
+        ref={backgroundRef}
+        className="absolute w-full h-[120vh]"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center 20%',
+          backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
+          top: '-10vh',
           zIndex: 0,
+          willChange: 'transform',
         }}
       >
         {/* Overlay */}
