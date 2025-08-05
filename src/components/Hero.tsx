@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter, Cursor } from 'react-simple-typewriter';
 import { ChevronDown } from 'lucide-react';
@@ -15,34 +15,8 @@ const Hero: React.FC = () => {
     delaySpeed: 2000,
   });
 
-  const backgroundRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Check if device supports parallax (not mobile)
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-    
-    if (isMobile || !backgroundRef.current) return;
 
-    const handleScroll = () => {
-      if (backgroundRef.current) {
-        const scrolled = window.pageYOffset;
-        const heroHeight = window.innerHeight;
-        
-        // Only apply parallax when in the hero section
-        if (scrolled < heroHeight) {
-          const rate = scrolled * 0.5; // Background moves slower than scroll
-          backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
-          backgroundRef.current.style.opacity = '1';
-        } else {
-          // Hide background when scrolled past hero
-          backgroundRef.current.style.opacity = '0';
-        }
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
@@ -50,17 +24,16 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Parallax Background Image */}
+      {/* Fixed Background Image */}
       <div 
-        ref={backgroundRef}
-        className="parallax-bg absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 w-full h-full"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
           zIndex: 0,
-          willChange: 'transform',
-          transition: 'opacity 0.3s ease-out',
         }}
       >
         {/* Overlay */}
@@ -80,7 +53,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight"
+            className="text-4xl sm:text-5xl lg:text-7xl font-bold mb-6 leading-tight logo-font"
           >
             seraieledit
           </motion.h1>
@@ -152,6 +125,8 @@ const Hero: React.FC = () => {
           <ChevronDown className="w-8 h-8" />
         </motion.div>
       </motion.button>
+
+
     </section>
   );
 };

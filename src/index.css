@@ -15,13 +15,104 @@
     font-family: 'Inter', system-ui, sans-serif;
   }
 
-  /* Mobile parallax fallback */
+  /* Pure CSS Parallax - Enhanced Version */
+  .parallax {
+    perspective: 1px;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    perspective-origin-x: 100%;
+    transform-style: preserve-3d;
+  }
+
+  .parallax__group {
+    position: relative;
+    height: 100vh;
+    transform-style: preserve-3d;
+  }
+
+  .parallax__layer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform-origin-x: 100%;
+  }
+
+  .parallax__layer--base {
+    transform: translateZ(0);
+  }
+
+  .parallax__layer--back {
+    transform: translateZ(-1px) scale(2);
+  }
+
+  /* Additional parallax layers for more depth */
+  .parallax__layer--deep {
+    transform: translateZ(-2px) scale(3);
+  }
+
+  .parallax__layer--far {
+    transform: translateZ(-3px) scale(4);
+  }
+
+  /* Alternative approach for better browser support */
+  .parallax-alt {
+    position: relative;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .parallax-alt__layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .parallax-alt__layer--back {
+    transform: translateY(0);
+    will-change: transform;
+  }
+
+  /* Mobile optimization */
   @media (max-width: 768px) {
-    #home .parallax-bg {
-      position: absolute !important;
-      transform: none !important;
-      background-attachment: scroll;
+    .parallax {
+      perspective: none;
+      overflow-y: auto;
     }
+    
+    .parallax__layer {
+      transform: none !important;
+    }
+  }
+
+  /* Progressive enhancement - disable for reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .parallax {
+      perspective: none;
+      overflow-y: auto;
+    }
+    
+    .parallax__layer {
+      transform: none !important;
+    }
+  }
+
+  /* Debug styles */
+  .parallax-debug {
+    border: 2px solid red;
+  }
+
+  .parallax-debug .parallax__layer--back {
+    border: 2px solid blue;
+  }
+
+  .parallax-debug .parallax__layer--base {
+    border: 2px solid green;
   }
 }
 
