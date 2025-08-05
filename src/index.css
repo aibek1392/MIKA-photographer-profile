@@ -92,17 +92,20 @@
 
   /* iOS Safari specific fixes */
   @supports (-webkit-touch-callout: none) {
-    /* iOS Safari - disable fixed background and use alternative approach */
-    #home .absolute {
-      background-attachment: scroll !important;
+    /* iOS Safari - use fixed background but with better mobile support */
+    #home div[style*="background-attachment"] {
+      background-attachment: fixed !important;
+      background-size: cover !important;
+      background-position: center 20% !important;
     }
   }
 
   /* Mobile background positioning */
   @media (max-width: 768px) {
-    #home .absolute {
-      background-position: center 30% !important;
+    #home div[style*="background-attachment"] {
+      background-position: center 25% !important;
       background-size: cover !important;
+      background-attachment: fixed !important;
     }
   }
 

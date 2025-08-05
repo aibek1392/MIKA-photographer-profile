@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center 20%',
           backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'scroll',
+          backgroundAttachment: 'fixed',
           zIndex: 0,
         }}
       >
