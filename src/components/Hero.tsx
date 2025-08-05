@@ -22,14 +22,24 @@ const Hero: React.FC = () => {
 
 
 
+
+
+
+
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
       if (backgroundRef.current) {
         const scrolled = window.pageYOffset;
-        // Move background in opposite direction to create "fixed" effect
-        backgroundRef.current.style.transform = `translateY(${scrolled * -1}px)`;
+        const heroHeight = window.innerHeight;
+        
+        // Only apply parallax within the hero section
+        if (scrolled < heroHeight) {
+          // Background moves slower than scroll (true parallax)
+          const rate = scrolled * 0.5;
+          backgroundRef.current.style.transform = `translateY(${rate}px)`;
+        }
       }
     };
 
@@ -43,14 +53,14 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Fixed Background Image */}
+      {/* Parallax Background Image */}
       <div 
         ref={backgroundRef}
         className="absolute w-full h-[120vh]"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center 20%',
           backgroundRepeat: 'no-repeat',
           top: '-10vh',
           zIndex: 0,

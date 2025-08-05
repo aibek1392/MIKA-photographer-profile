@@ -90,10 +90,20 @@
     }
   }
 
-  /* Parallax background optimization */
+  /* Fixed background optimization */
   #home div[style*="background-image"] {
     backface-visibility: hidden;
     perspective: 1000px;
+  }
+
+  /* Ensure no white gaps on mobile */
+  @media (max-width: 768px) {
+    #home div[style*="background-attachment"] {
+      background-attachment: scroll !important;
+      background-size: cover !important;
+      background-position: center 25% !important;
+      min-height: 100vh !important;
+    }
   }
 
   /* Progressive enhancement - disable for reduced motion */
