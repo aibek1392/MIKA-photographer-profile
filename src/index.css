@@ -90,6 +90,22 @@
     }
   }
 
+  /* iOS Safari specific fixes */
+  @supports (-webkit-touch-callout: none) {
+    /* iOS Safari - disable fixed background and use alternative approach */
+    #home .absolute {
+      background-attachment: scroll !important;
+    }
+  }
+
+  /* Mobile background positioning */
+  @media (max-width: 768px) {
+    #home .absolute {
+      background-position: center 30% !important;
+      background-size: cover !important;
+    }
+  }
+
   /* Progressive enhancement - disable for reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .parallax {
