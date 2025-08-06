@@ -62,9 +62,9 @@ const Hero: React.FC = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center 20%',
           backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed', // ⭐️ This is the key
           top: '-10vh',
           zIndex: 0,
-          willChange: 'transform',
         }}
       >
         {/* Overlay */}

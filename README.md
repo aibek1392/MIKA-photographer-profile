@@ -1,201 +1,222 @@
-# Mika Photography Portfolio Website
+# Seraieledit - Professional Photography Portfolio Website
 
-A modern, mobile-first, responsive photographer portfolio website built with React, TypeScript, and Tailwind CSS.
+A modern, responsive photography portfolio website built with React, TypeScript, and Tailwind CSS. Features stunning galleries, parallax effects, and interactive elements to showcase photography work.
 
-## ✨ Features
+## 🌟 Features
 
-- **One-page smooth-scroll layout** with sections for Home, About, Portfolio, and Contact
-- **Full-screen hero section** with animated background and typewriter effect
-- **Responsive photo gallery** with lightbox functionality and category filtering
-- **Sticky navigation** with smooth scrolling to sections
-- **Dark/light mode toggle** with persistent theme preference
-- **Mobile-friendly design** with hamburger menu for smaller screens
-- **Contact form** with validation and success feedback
-- **Social media integration** in footer
-- **Smooth animations** using Framer Motion
-- **SEO optimized** with proper meta tags and semantic HTML
-- **Performance optimized** with lazy loading images
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **Modern UI/UX**: Clean, professional design with smooth animations
+- **Interactive Galleries**: Multiple gallery formats including 3D carousel, flip-reveal, and WebGL circular gallery
+- **Parallax Effects**: Beautiful parallax scrolling on the hero section
+- **Contact Integration**: Direct links to email, phone, WhatsApp, and Google Maps
+- **Social Media**: Instagram integration and social sharing
+- **Dark/Light Mode**: Automatic theme switching based on system preferences
+- **Performance Optimized**: Fast loading times and smooth animations
 
-## 🚀 Technologies Used
+## 🚀 Live Demo
 
-- **React 19** with TypeScript
-- **Tailwind CSS** for styling
-- **Framer Motion** for animations
-- **React Intersection Observer** for scroll animations
-- **React Simple Typewriter** for typewriter effects
-- **Lucide React** for icons
+Visit the live website: [https://seraieledit-lwsjdww1o-ozhorov-8940s-projects.vercel.app](https://seraieledit-lwsjdww1o-ozhorov-8940s-projects.vercel.app)
+
+## 🛠️ Tech Stack
+
+- **Frontend**: React 18, TypeScript
+- **Styling**: Tailwind CSS, PostCSS
+- **Animations**: Framer Motion
+- **WebGL**: OGL library (for circular gallery)
+- **Deployment**: Vercel
+- **Version Control**: Git
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (version 16 or higher)
+- **npm** (comes with Node.js)
+- **Git** (for version control)
+
+### Check your installations:
+
+```bash
+node --version
+npm --version
+git --version
+```
+
+If any of these commands fail, please install the missing software:
+
+- **Node.js**: Download from [nodejs.org](https://nodejs.org/)
+- **Git**: Download from [git-scm.com](https://git-scm.com/)
+
+## 🚀 Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/your-username/seraieledit-photography.git
+cd seraieledit-photography
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+This will install all required packages listed in `package.json`.
+
+### 3. Start Development Server
+
+```bash
+npm start
+```
+
+The application will open in your browser at `http://localhost:3000`.
+
+### 4. Build for Production
+
+```bash
+npm run build
+```
+
+This creates an optimized production build in the `build` folder.
 
 ## 📁 Project Structure
 
 ```
-frontend/
-├── public/
-│   ├── index.html
-│   └── manifest.json
+seraieledit-photography/
+├── public/                 # Static assets
+│   ├── index.html         # Main HTML file
+│   └── images/            # Image assets
 ├── src/
-│   ├── components/
-│   │   ├── About.tsx
-│   │   ├── Contact.tsx
-│   │   ├── Footer.tsx
-│   │   ├── Hero.tsx
-│   │   ├── Navigation.tsx
-│   │   └── Portfolio.tsx
-│   ├── App.tsx
-│   ├── index.tsx
-│   └── index.css
-├── tailwind.config.js
-├── postcss.config.js
-└── package.json
+│   ├── components/        # React components
+│   │   ├── Hero.tsx      # Hero section with parallax
+│   │   ├── About.tsx     # About section
+│   │   ├── Portfolio.tsx # Portfolio gallery
+│   │   ├── Contact.tsx   # Contact information
+│   │   ├── Footer.tsx    # Footer component
+│   │   └── ...           # Other components
+│   ├── App.tsx           # Main app component
+│   ├── index.tsx         # App entry point
+│   └── index.css         # Global styles
+├── package.json          # Dependencies and scripts
+├── tailwind.config.js    # Tailwind CSS configuration
+├── tsconfig.json         # TypeScript configuration
+└── README.md            # This file
 ```
-
-## 🎨 Design Features
-
-### Hero Section
-- Full-screen background image with overlay
-- Animated text with typewriter effect
-- Call-to-action buttons
-- Smooth scroll indicator
-
-### About Section
-- Personal introduction with animated stats
-- Fun facts about the photographer
-- Responsive grid layout
-
-### Portfolio Section
-- Filterable gallery by category (All, Weddings, Portraits, Events)
-- Lightbox functionality with navigation
-- Hover effects and smooth transitions
-- Lazy loading for performance
-
-### Contact Section
-- Contact form with validation
-- Business hours and contact information
-- Success feedback on form submission
-
-### Navigation & Footer
-- Sticky navigation with scroll effects
-- Mobile hamburger menu
-- Social media links
-- Back to top button
-
-## 🎯 Key Features
-
-### Responsive Design
-- Mobile-first approach
-- Breakpoints: sm (640px), md (768px), lg (1024px), xl (1280px)
-- Optimized for all device sizes
-
-### Dark Mode
-- Toggle between light and dark themes
-- Persistent theme preference using localStorage
-- Smooth transitions between themes
-
-### Animations
-- Scroll-triggered animations using Intersection Observer
-- Smooth page transitions
-- Hover effects and micro-interactions
-- Staggered animations for lists and grids
-
-### Performance
-- Lazy loading images
-- Optimized bundle size
-- Preconnect to external domains
-- Semantic HTML for better SEO
-
-## 🛠️ Installation & Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd frontend
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start development server**
-   ```bash
-   npm start
-   ```
-
-4. **Build for production**
-   ```bash
-   npm run build
-   ```
-
-## 📱 Mobile Features
-
-- Touch-friendly navigation
-- Swipe gestures for lightbox
-- Optimized touch targets
-- Responsive typography
-- Mobile-optimized forms
 
 ## 🎨 Customization
 
-### Colors & Themes
-The website uses Tailwind CSS with a custom color palette. You can modify colors in `tailwind.config.js`:
+### Updating Content
 
-```javascript
-theme: {
-  extend: {
-    colors: {
-      // Add your custom colors here
-    }
-  }
-}
-```
+1. **Contact Information**: Edit `src/components/Contact.tsx`
+   - Update email, phone, address
+   - Modify WhatsApp message
+   - Change business hours
 
-### Content
-- Update personal information in component files
-- Replace placeholder images with actual photography work
-- Modify contact information and social media links
-- Customize business hours and services
+2. **Social Media Links**: 
+   - Instagram: Update in `Contact.tsx` and `Footer.tsx`
+   - Other social platforms: Add to `Footer.tsx`
+
+3. **Images**: 
+   - Replace images in `public/` folder
+   - Update image paths in components
+
+4. **Text Content**: 
+   - Hero text: Edit `src/components/Hero.tsx`
+   - About section: Edit `src/components/About.tsx`
+   - Portfolio descriptions: Edit `src/components/Portfolio.tsx`
 
 ### Styling
-- Modify component styles in individual `.tsx` files
-- Update global styles in `src/index.css`
-- Customize animations in `tailwind.config.js`
 
-## 📸 Image Placeholders
+- **Colors**: Modify `tailwind.config.js` for theme colors
+- **Fonts**: Update font imports in `src/index.css`
+- **Animations**: Adjust Framer Motion settings in components
 
-The website currently uses Unsplash images as placeholders. Replace these with actual photography work:
+## 📱 Available Scripts
 
-1. **Hero Background**: Update the background image URL in `Hero.tsx`
-2. **Portfolio Images**: Replace image URLs in the `images` array in `Portfolio.tsx`
-3. **About Section**: Add personal photos as needed
+- `npm start` - Runs the app in development mode
+- `npm run build` - Builds the app for production
+- `npm test` - Launches the test runner
+- `npm run eject` - Ejects from Create React App (not recommended)
 
-## 🔧 Configuration
+## 🌐 Deployment
 
-### Tailwind CSS
-The project is configured with Tailwind CSS v4. Custom animations and utilities are defined in `tailwind.config.js`.
+### Deploy to Vercel (Recommended)
 
-### Framer Motion
-Animation variants and transitions are defined in each component for optimal performance.
+1. **Install Vercel CLI**:
+   ```bash
+   npm install -g vercel
+   ```
 
-### SEO
-Meta tags and Open Graph data are configured in `public/index.html` for better social media sharing.
+2. **Deploy**:
+   ```bash
+   vercel --prod
+   ```
+
+3. **Follow the prompts** to connect your GitHub repository
+
+### Deploy to Other Platforms
+
+- **Netlify**: Connect your GitHub repo and set build command to `npm run build`
+- **GitHub Pages**: Use `gh-pages` package
+- **AWS S3**: Upload the `build` folder to an S3 bucket
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Port 3000 already in use**:
+   ```bash
+   # Kill the process using port 3000
+   lsof -ti:3000 | xargs kill -9
+   # Or use a different port
+   PORT=3001 npm start
+   ```
+
+2. **Node modules issues**:
+   ```bash
+   # Clear npm cache and reinstall
+   npm cache clean --force
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+
+3. **Build errors**:
+   ```bash
+   # Check for TypeScript errors
+   npx tsc --noEmit
+   # Check for linting errors
+   npm run lint
+   ```
+
+### Performance Issues
+
+- Ensure images are optimized (use WebP format when possible)
+- Check bundle size with `npm run build`
+- Consider lazy loading for large galleries
+
+## 📞 Support
+
+If you encounter any issues:
+
+1. Check the troubleshooting section above
+2. Review the console for error messages
+3. Ensure all dependencies are properly installed
+4. Verify Node.js version compatibility
 
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## 🤝 Contributing
+## 🙏 Acknowledgments
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## 📞 Support
-
-For questions or support, please contact:
-- Email: hello@mikaphotography.com
-- Phone: +1 (555) 123-4567
+- Built with [Create React App](https://create-react-app.dev/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+- Animations powered by [Framer Motion](https://www.framer.com/motion/)
+- WebGL gallery using [OGL](https://github.com/oframe/ogl)
 
 ---
 
-**Note**: This is a template website. Replace all placeholder content, images, and contact information with actual photographer details before deployment.
+**Happy coding! 🎉**
+
+If you find this project helpful, please consider giving it a ⭐️ on GitHub!
