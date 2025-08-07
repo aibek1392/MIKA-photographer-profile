@@ -12,19 +12,22 @@ const Portfolio: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const images = [
-    { id: 1, src: '/photo_2025-07-25 13.56.46.jpeg', alt: 'Wedding couple in elegant setting', category: 'weddings', title: 'Elegant Wedding' },
-    { id: 2, src: '/photo_2025-07-25 13.56.42.jpeg', alt: 'Portrait of beautiful woman', category: 'portraits', title: 'Graceful Portrait' },
-    { id: 3, src: '/photo_2025-07-25 13.56.39.jpeg', alt: 'Corporate event celebration', category: 'events', title: 'Corporate Celebration' },
-    { id: 4, src: '/photo_2025-07-25 13.56.36.jpeg', alt: 'Intimate wedding ceremony', category: 'weddings', title: 'Intimate Ceremony' },
-    { id: 5, src: '/photo_2025-07-25 13.56.32.jpeg', alt: 'Professional headshot', category: 'portraits', title: 'Professional Headshot' },
-    { id: 6, src: '/photo_2025-07-25 13.56.25.jpeg', alt: 'Birthday party celebration', category: 'events', title: 'Birthday Joy' },
-    { id: 7, src: '/photo_2025-07-25 13.56.22.jpeg', alt: 'Wedding reception moments', category: 'weddings', title: 'Reception Memories' },
-    { id: 8, src: '/photo_2025-07-25 13.56.17.jpeg', alt: 'Family portrait session', category: 'portraits', title: 'Family Moments' },
-    { id: 9, src: '/photo_2025-07-25 13.56.13.jpeg', alt: 'Special event coverage', category: 'events', title: 'Special Event' },
-    { id: 10, src: '/photo_2025-07-25 13.56.11.jpeg', alt: 'Wedding details and decor', category: 'weddings', title: 'Wedding Details' },
-    { id: 11, src: '/photo_2025-07-25 14.35.44.jpeg', alt: 'Wedding ceremony moments', category: 'weddings', title: 'Ceremony Moments' },
-    { id: 12, src: '/photo_2025-07-25 14.35.41.jpeg', alt: 'Event photography', category: 'events', title: 'Event Photography' },
-    { id: 13, src: '/photo_2025-07-25 14.35.38.jpeg', alt: 'Portrait photography', category: 'portraits', title: 'Portrait Photography' },
+    { id: 1, src: '/photo_2025-07-25 13.56.42.jpeg', alt: 'Portrait of beautiful woman', category: 'portraits', title: 'Graceful Portrait' },
+    { id: 2, src: '/photo_2025-07-25 13.56.39.jpeg', alt: 'Corporate event celebration', category: 'events', title: 'Corporate Celebration' },
+    { id: 3, src: '/photo_2025-07-25 13.56.32.jpeg', alt: 'Professional headshot', category: 'portraits', title: 'Professional Headshot' },
+    { id: 4, src: '/photo_2025-07-25 13.56.25.jpeg', alt: 'Birthday party celebration', category: 'events', title: 'Birthday Joy' },
+    { id: 5, src: '/photo_2025-07-25 13.56.17.jpeg', alt: 'Family portrait session', category: 'portraits', title: 'Family Moments' },
+    { id: 6, src: '/photo_2025-07-25 13.56.13.jpeg', alt: 'Special event coverage', category: 'events', title: 'Special Event' },
+    { id: 7, src: '/photo_2025-07-25 14.35.41.jpeg', alt: 'Event photography', category: 'events', title: 'Event Photography' },
+    { id: 8, src: '/photo_2025-07-25 14.35.38.jpeg', alt: 'Portrait photography', category: 'portraits', title: 'Portrait Photography' },
+    // New photos added
+    { id: 9, src: '/IMG_7152.JPG', alt: 'Professional portrait photography', category: 'portraits', title: 'Professional Portrait' },
+    { id: 10, src: '/IMG_7151.JPG', alt: 'Creative portrait session', category: 'portraits', title: 'Creative Portrait' },
+    { id: 11, src: '/IMG_7149.JPG', alt: 'Event photography coverage', category: 'events', title: 'Event Coverage' },
+    { id: 12, src: '/IMG_7148.JPG', alt: 'Portrait photography session', category: 'portraits', title: 'Portrait Session' },
+    { id: 13, src: '/IMG_7145.JPG', alt: 'Corporate event photography', category: 'events', title: 'Corporate Event' },
+    { id: 14, src: '/IMG_7143.JPG', alt: 'Professional headshot photography', category: 'portraits', title: 'Professional Headshot' },
+    { id: 15, src: '/IMG_7142.JPG', alt: 'Event celebration photography', category: 'events', title: 'Event Celebration' },
   ];
 
   const containerVariants = {
@@ -87,9 +90,6 @@ const Portfolio: React.FC = () => {
           >
             <ToggleGroupItem value="all">
               All
-            </ToggleGroupItem>
-            <ToggleGroupItem value="weddings">
-              Weddings
             </ToggleGroupItem>
             <ToggleGroupItem value="portraits">
               Portraits
