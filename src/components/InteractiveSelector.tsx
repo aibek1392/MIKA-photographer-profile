@@ -1,228 +1,314 @@
-import { useEffect, useRef, useState } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-// BAZAAR magazine editorial photos - updated selection
-const images = [
-  { title: 'Professional Fashion', url: '/IMG_7199.JPG' },
-  { title: 'Editorial Session', url: '/IMG_7293.JPG' },
-  { title: 'Fashion Photography', url: '/IMG_7294.JPG' },
-  { title: 'Editorial Beauty', url: '/IMG_7295.JPG' },
-  { title: 'Elegant Fashion', url: '/IMG_7297.JPG' },
-  { title: 'Professional Editorial', url: '/IMG_7298.JPG' },
-  { title: 'Fashion Editorial', url: '/IMG_7299.JPG' },
-  { title: 'Editorial Portrait', url: '/IMG_7300.JPG' },
-];
+interface ImageSwiperProps {
+  images: string;
+  cardWidth?: number;
+  cardHeight?: number;
+  className?: string;
+}
 
-const FLIP_SPEED = 750;
-const flipTiming = { duration: FLIP_SPEED, iterations: 1 };
+export const ImageSwiper: React.FC<ImageSwiperProps> = ({
+  images,
+  cardWidth = 256,  // 16rem = 256px
+  cardHeight = 352, // 22rem = 352px
+  className = ''
+}) => {
+  const cardStackRef = useRef<HTMLDivElement>(null);
+  const isSwiping = useRef(false);
+  const startX = useRef(0);
+  const currentX = useRef(0);
+  const animationFrameId = useRef<number | null>(null);
 
-// flip down
-const flipAnimationTop = [
-  { transform: 'rotateX(0)' },
-  { transform: 'rotateX(-90deg)' },
-  { transform: 'rotateX(-90deg)' }
-];
-const flipAnimationBottom = [
-  { transform: 'rotateX(90deg)' },
-  { transform: 'rotateX(90deg)' },
-  { transform: 'rotateX(0)' }
-];
+  const imageList = images.split(',').map(img => img.trim()).filter(img => img);
+  const [cardOrder, setCardOrder] = useState<number[]>(() =>
+    Array.from({ length: imageList.length }, (_, i) => i)
+  );
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
-// flip up
-const flipAnimationTopReverse = [
-  { transform: 'rotateX(-90deg)' },
-  { transform: 'rotateX(-90deg)' },
-  { transform: 'rotateX(0)' }
-];
-const flipAnimationBottomReverse = [
-  { transform: 'rotateX(0)' },
-  { transform: 'rotateX(90deg)' },
-  { transform: 'rotateX(90deg)' }
-];
-
-export default function FlipGallery() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const uniteRef = useRef<NodeListOf<HTMLDivElement> | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  // initialise first image once
-  useEffect(() => {
-    if (!containerRef.current) return;
-    uniteRef.current = containerRef.current.querySelectorAll('.unite');
-    defineFirstImg();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getDurationFromCSS = useCallback((
+    variableName: string,
+    element?: HTMLElement | null
+  ): number => {
+    const targetElement = element || document.documentElement;
+    const value = getComputedStyle(targetElement)
+      ?.getPropertyValue(variableName)
+      ?.trim();
+    if (!value) return 0;
+    if (value.endsWith("ms")) return parseFloat(value);
+    if (value.endsWith("s")) return parseFloat(value) * 1000;
+    return parseFloat(value) || 0;
   }, []);
 
-  const defineFirstImg = () => {
-    if (uniteRef.current) {
-      uniteRef.current.forEach(setActiveImage);
+  const getCards = useCallback((): HTMLElement[] => {
+    if (!cardStackRef.current) return [];
+    return Array.from(cardStackRef.current.querySelectorAll('.image-card')) as HTMLElement[];
+  }, []);
+
+  const getActiveCard = useCallback((): HTMLElement | null => {
+    const cards = getCards();
+    return cards[0] || null;
+  }, [getCards]);
+
+  const updatePositions = useCallback(() => {
+    const cards = getCards();
+    cards.forEach((card, i) => {
+      card.style.setProperty('--i', (i + 1).toString());
+      card.style.setProperty('--swipe-x', '0px');
+      card.style.setProperty('--swipe-rotate', '0deg');
+      card.style.opacity = '1';
+    });
+  }, [getCards]);
+
+  const applySwipeStyles = useCallback((deltaX: number) => {
+    const card = getActiveCard();
+    if (!card) return;
+    card.style.setProperty('--swipe-x', `${deltaX}px`);
+    card.style.setProperty('--swipe-rotate', `${deltaX * 0.2}deg`);
+    card.style.opacity = (1 - Math.min(Math.abs(deltaX) / 100, 1) * 0.75).toString();
+  }, [getActiveCard]);
+
+  const handleImageClick = useCallback((imageSrc: string, e: React.MouseEvent) => {
+    // Only open fullscreen if we're not in the middle of a swipe
+    if (!isSwiping.current) {
+      e.preventDefault();
+      e.stopPropagation();
+      setFullscreenImage(imageSrc);
     }
-    setImageTitle();
-  };
+  }, []);
 
-  const setActiveImage = (el: HTMLDivElement) => {
-    el.style.backgroundImage = `url('${images[currentIndex].url}')`;
-  };
+  const closeFullscreen = useCallback(() => {
+    setFullscreenImage(null);
+  }, []);
 
-  const setImageTitle = () => {
-    const gallery = containerRef.current;
-    if (!gallery) return;
-    gallery.setAttribute('data-title', images[currentIndex].title);
-    gallery.style.setProperty('--title-y', '0');
-    gallery.style.setProperty('--title-opacity', '1');
-  };
+  const handleStart = useCallback((clientX: number) => {
+    if (isSwiping.current) return;
+    isSwiping.current = true;
+    startX.current = clientX;
+    currentX.current = clientX;
+    const card = getActiveCard();
+    if (card) card.style.transition = 'none';
+  }, [getActiveCard]);
 
-  const updateGallery = (nextIndex: number, isReverse = false) => {
-    const gallery = containerRef.current;
-    if (!gallery) return;
-
-    // determine direction animation arrays
-    const topAnim = isReverse ? flipAnimationTopReverse : flipAnimationTop;
-    const bottomAnim = isReverse
-      ? flipAnimationBottomReverse
-      : flipAnimationBottom;
-
-    const topEl = gallery.querySelector('.overlay-top') as HTMLElement;
-    const bottomEl = gallery.querySelector('.overlay-bottom') as HTMLElement;
-    
-    if (topEl) topEl.animate(topAnim, flipTiming);
-    if (bottomEl) bottomEl.animate(bottomAnim, flipTiming);
-
-    // hide title
-    gallery.style.setProperty('--title-y', '-1rem');
-    gallery.style.setProperty('--title-opacity', '0');
-    gallery.setAttribute('data-title', '');
-
-    // update images with slight delay so animation looks continuous
-    if (uniteRef.current) {
-      uniteRef.current.forEach((el, idx) => {
-        const delay =
-          (isReverse && (idx !== 1 && idx !== 2)) ||
-          (!isReverse && (idx === 1 || idx === 2))
-            ? FLIP_SPEED - 200
-            : 0;
-
-        setTimeout(() => setActiveImage(el), delay);
-      });
+  const handleEnd = useCallback(() => {
+    if (!isSwiping.current) return;
+    if (animationFrameId.current) {
+      cancelAnimationFrame(animationFrameId.current);
+      animationFrameId.current = null;
     }
 
-    // reveal new title roughly half‑way through animation
-    setTimeout(setImageTitle, FLIP_SPEED * 0.5);
-  };
+    const deltaX = currentX.current - startX.current;
+    const threshold = 50;
+    const duration = getDurationFromCSS('--card-swap-duration', cardStackRef.current);
+    const card = getActiveCard();
 
-  const updateIndex = (increment: number) => {
-    const inc = Number(increment);
-    const newIndex = (currentIndex + inc + images.length) % images.length;
-    const isReverse = inc < 0;
-    setCurrentIndex(newIndex);
-    updateGallery(newIndex, isReverse);
-  };
+    if (card) {
+      card.style.transition = `transform ${duration}ms ease, opacity ${duration}ms ease`;
+
+      if (Math.abs(deltaX) > threshold) {
+        const direction = Math.sign(deltaX);
+        card.style.setProperty('--swipe-x', `${direction * 300}px`);
+        card.style.setProperty('--swipe-rotate', `${direction * 20}deg`);
+
+        setTimeout(() => {
+          if (getActiveCard() === card) {
+            card.style.setProperty('--swipe-rotate', `${-direction * 20}deg`);
+          }
+        }, duration * 0.5);
+
+        setTimeout(() => {
+          setCardOrder(prev => {
+            if (prev.length === 0) return [];
+            return [...prev.slice(1), prev[0]];
+          });
+        }, duration);
+      } else {
+        applySwipeStyles(0);
+      }
+    }
+
+    isSwiping.current = false;
+    startX.current = 0;
+    currentX.current = 0;
+  }, [getDurationFromCSS, getActiveCard, applySwipeStyles]);
+
+  const handleMove = useCallback((clientX: number) => {
+    if (!isSwiping.current) return;
+    if (animationFrameId.current) {
+      cancelAnimationFrame(animationFrameId.current);
+    }
+    animationFrameId.current = requestAnimationFrame(() => {
+      currentX.current = clientX;
+      const deltaX = currentX.current - startX.current;
+      applySwipeStyles(deltaX);
+
+      if (Math.abs(deltaX) > 50) {
+        handleEnd();
+      }
+    });
+  }, [applySwipeStyles, handleEnd]);
+
+  useEffect(() => {
+    const cardStackElement = cardStackRef.current;
+    if (!cardStackElement) return;
+
+    const handlePointerDown = (e: PointerEvent) => {
+      handleStart(e.clientX);
+    };
+    const handlePointerMove = (e: PointerEvent) => {
+      handleMove(e.clientX);
+    };
+    const handlePointerUp = (e: PointerEvent) => {
+      handleEnd();
+    };
+
+    cardStackElement.addEventListener('pointerdown', handlePointerDown);
+    cardStackElement.addEventListener('pointermove', handlePointerMove);
+    cardStackElement.addEventListener('pointerup', handlePointerUp);
+
+    return () => {
+      cardStackElement.removeEventListener('pointerdown', handlePointerDown);
+      cardStackElement.removeEventListener('pointermove', handlePointerMove);
+      cardStackElement.removeEventListener('pointerup', handlePointerUp);
+      if (animationFrameId.current) {
+        cancelAnimationFrame(animationFrameId.current);
+      }
+    };
+  }, [handleStart, handleMove, handleEnd]);
+
+  useEffect(() => {
+    updatePositions();
+  }, [cardOrder, updatePositions]);
+
+  // Handle ESC key for closing fullscreen
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && fullscreenImage) {
+        closeFullscreen();
+      }
+    };
+
+    if (fullscreenImage) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [fullscreenImage, closeFullscreen]);
 
   return (
-    <div className='flex items-center justify-center w-full py-8'>
+    <>
+      <section
+        className={`relative grid place-content-center select-none ${className}`}
+        ref={cardStackRef}
+        style={{
+          width: cardWidth + 32,
+          height: cardHeight + 32,
+          touchAction: 'none',
+          transformStyle: 'preserve-3d',
+          '--card-perspective': '700px',
+          '--card-z-offset': '12px',
+          '--card-y-offset': '7px',
+          '--card-max-z-index': imageList.length.toString(),
+          '--card-swap-duration': '0.3s',
+        } as React.CSSProperties}
+      >
+        {cardOrder.map((originalIndex, displayIndex) => (
+          <article
+            key={`${imageList[originalIndex]}-${originalIndex}`}
+            className="image-card absolute cursor-grab active:cursor-grabbing
+                       place-self-center border border-slate-400 rounded-xl
+                       shadow-md overflow-hidden will-change-transform"
+            style={{
+              '--i': (displayIndex + 1).toString(),
+              zIndex: imageList.length - displayIndex,
+              width: cardWidth,
+              height: cardHeight,
+              transform: `perspective(var(--card-perspective))
+                         translateZ(calc(-1 * var(--card-z-offset) * var(--i)))
+                         translateY(calc(var(--card-y-offset) * var(--i)))
+                         translateX(var(--swipe-x, 0px))
+                         rotateY(var(--swipe-rotate, 0deg))`
+            } as React.CSSProperties}
+          >
+            <img
+              src={imageList[originalIndex]}
+              alt={`Editorial photo ${originalIndex + 1}`}
+              className="w-full h-full object-cover select-none cursor-pointer"
+              draggable={false}
+              onClick={(e) => handleImageClick(imageList[originalIndex], e)}
+              style={{ pointerEvents: 'auto' }}
+            />
+          </article>
+        ))}
+      </section>
+
+      {/* Fullscreen Modal */}
+      <AnimatePresence>
+        {fullscreenImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeFullscreen}
+            className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+            style={{ backdropFilter: 'blur(10px)' }}
+          >
+            {/* Close button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                closeFullscreen();
+              }}
+              className="absolute top-4 right-4 z-10 w-12 h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200"
+              aria-label="Close"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+
+            <motion.img
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              src={fullscreenImage}
+              alt="Editorial fashion session"
+              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};
+
+// Wrapper component for the About section
+export default function AboutImageGallery() {
+  const imageUrls = "/IMG_7199.JPG, /IMG_7293.JPG, /IMG_7294.JPG, /IMG_7295.JPG, /IMG_7297.JPG, /IMG_7298.JPG, /IMG_7299.JPG, /IMG_7300.JPG";
+  
+  return (
+    <div className='flex items-center justify-center w-full py-4'>
       <div className='text-center'>
         {/* Header */}
-        <div className="mb-6">
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-2">
-            Featured Editorials
+        <div className="mb-4">
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-1">
+          Harper's BAZAAR magazine work
           </h3>
-          <p className="text-sm md:text-base text-gray-200">
-            Harper's BAZAAR magazine work
-          </p>
         </div>
 
-        <div
-          className='relative bg-white/10 border border-white/25 p-2'
-          style={{ '--gallery-bg-color': 'rgba(255 255 255 / 0.075)' } as React.CSSProperties}
-        >
-          {/* flip gallery */}
-          <div
-            id='flip-gallery'
-            ref={containerRef}
-            className='relative w-[240px] h-[400px] md:w-[300px] md:h-[500px] text-center'
-            style={{ perspective: '800px' }}
-          >
-            <div className='top unite bg-cover bg-no-repeat'></div>
-            <div className='bottom unite bg-cover bg-no-repeat'></div>
-            <div className='overlay-top unite bg-cover bg-no-repeat'></div>
-            <div className='overlay-bottom unite bg-cover bg-no-repeat'></div>
-          </div>
+        <ImageSwiper 
+          images={imageUrls} 
+          cardWidth={280} 
+          cardHeight={380} 
+          className="mx-auto"
+        />
 
-          {/* navigation */}
-          <div className='absolute top-full right-0 mt-2 flex gap-2'>
-            <button
-              type='button'
-              onClick={() => updateIndex(-1)}
-              title='Previous'
-              className='text-white opacity-75 hover:opacity-100 hover:scale-125 transition'
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              type='button'
-              onClick={() => updateIndex(1)}
-              title='Next'
-              className='text-white opacity-75 hover:opacity-100 hover:scale-125 transition'
-            >
-              <ChevronRight size={20} />
-            </button>
+        {/* Swipe indicators */}
+        <div className="flex items-center justify-center gap-4 mt-2 text-white/60">
+          <div className="flex items-center gap-2">
+            <ChevronLeft size={18} />
+            <ChevronRight size={18} />
           </div>
         </div>
-
-        {/* component-scoped styles that Tailwind cannot express */}
-        <style>{`
-          #flip-gallery::after {
-            content: '';
-            position: absolute;
-            background-color: black;
-            width: 100%;
-            height: 4px;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-          }
-
-          #flip-gallery::before {
-            content: attr(data-title);
-            color: rgba(255 255 255 / 0.75);
-            font-size: 0.75rem;
-            left: -0.5rem;
-            position: absolute;
-            top: calc(100% + 1rem);
-            line-height: 2;
-            opacity: var(--title-opacity, 0);
-            transform: translateY(var(--title-y, 0));
-            transition: opacity 500ms ease-in-out, transform 500ms ease-in-out;
-          }
-
-          #flip-gallery > * {
-            position: absolute;
-            width: 100%;
-            height: 50%;
-            overflow: hidden;
-            background-size: 240px 400px;
-          }
-
-          @media (min-width: 600px) {
-            #flip-gallery > * {
-              background-size: 300px 500px;
-            }
-          }
-
-          .top,
-          .overlay-top {
-            top: 0;
-            transform-origin: bottom;
-            background-position: top;
-          }
-
-          .bottom,
-          .overlay-bottom {
-            bottom: 0;
-            transform-origin: top;
-            background-position: bottom;
-          }
-        `}</style>
       </div>
     </div>
   );

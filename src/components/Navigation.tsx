@@ -32,6 +32,7 @@ const Navigation: React.FC = () => {
   const navItems = [
     { href: '#home', label: 'Home' },
     { href: '#about', label: 'About' },
+    { href: '#pricing', label: 'Pricing' },
     { href: '#portfolio', label: 'Portfolio' },
     { href: '#contact', label: 'Contact' },
   ];

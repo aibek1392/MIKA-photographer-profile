@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Hero from './components/Hero';
 import About from './components/About';
+import Pricing from './components/Pricing';
 import Portfolio from './components/Portfolio';
 import InstagramFeed from './components/InstagramFeed';
 import Contact from './components/Contact';
@@ -42,6 +43,7 @@ function App() {
       <main>
         <Hero />
         <About />
+        <Pricing />
         <Portfolio />
         <InstagramFeed />
         <Contact />

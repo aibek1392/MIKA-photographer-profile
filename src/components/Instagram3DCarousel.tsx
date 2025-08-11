@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 // Hook that works on SSR/CSR
 export const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -47,7 +48,7 @@ type CarouselProps = {
 
 const Carousel = memo(({ handleClick, controls, cards, isCarouselActive }: CarouselProps) => {
   const isScreenSizeSm = useMediaQuery('(max-width: 640px)');
-  const cylinderWidth = isScreenSizeSm ? 1100 : 1800;
+  const cylinderWidth = isScreenSizeSm ? 1400 : 2200;
   const faceCount = cards.length;
   const faceWidth = cylinderWidth / Math.max(faceCount, 1);
   const radius = cylinderWidth / (2 * Math.PI);
@@ -141,6 +142,18 @@ const Instagram3DCarousel: React.FC<Instagram3DCarouselProps> = ({ images }) => 
             style={{ willChange: 'opacity' }}
             transition={transitionOverlay}
           >
+            {/* Close button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              className="absolute top-4 right-4 z-10 w-10 h-10 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200"
+              aria-label="Close"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
+
             <motion.img
               layoutId={`img-${activeImg}`}
               src={activeImg}
@@ -153,8 +166,17 @@ const Instagram3DCarousel: React.FC<Instagram3DCarouselProps> = ({ images }) => 
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="relative h-[500px] w-full overflow-hidden">
+      <div className="relative h-[550px] w-full overflow-hidden">
         <Carousel handleClick={handleClick} controls={controls} cards={cards} isCarouselActive={isCarouselActive} />
+      </div>
+      
+      {/* Drag indicators */}
+      <div className="flex items-center justify-center gap-4 mt-2 text-white/60">
+        <div className="flex items-center gap-2">
+          <ChevronLeft size={18} />
+          <span className="text-xs">Drag</span>
+          <ChevronRight size={18} />
+        </div>
       </div>
     </motion.div>
   );

@@ -42,18 +42,18 @@ const InstagramFeed: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
+    <section className="py-12 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="text-center mb-16"
+          className="text-center mb-8"
         >
           <motion.h2 
             variants={itemVariants}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6 text-white"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white"
           >
             Instagram Feed
           </motion.h2>
@@ -66,13 +66,13 @@ const InstagramFeed: React.FC = () => {
           </motion.p>
         </motion.div>
 
-        <motion.div variants={itemVariants} className="w-full h-[600px]">
+        <motion.div variants={itemVariants} className="w-full h-[550px]">
           <Instagram3DCarousel images={instagramImages} />
         </motion.div>
 
         <motion.div
           variants={itemVariants}
-          className="text-center mt-12"
+          className="text-center mt-8"
         >
           <a
             href="https://instagram.com/mikavisionnyc"
