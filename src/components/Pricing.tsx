@@ -91,13 +91,13 @@ export const TextStaggerHover = React.forwardRef<
           key={`${char}-${charIndex}`}
           className="relative inline-block overflow-hidden"
         >
-                      <MotionConfig
-              transition={{
-                delay: charIndex * 0.025,
-                duration: 0.3,
-                ease: "easeOut",
-              }}
-            >
+                                <MotionConfig
+            transition={{
+              delay: charIndex * 0.025,
+              duration: 0.3,
+              ease: "easeOut",
+            }}
+          >
             <motion.span
               className="inline-block opacity-20"
               initial={{ y: "0%" }}
