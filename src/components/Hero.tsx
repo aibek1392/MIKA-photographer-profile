@@ -6,12 +6,7 @@ import { ChevronDown } from 'lucide-react';
 const Hero: React.FC = () => {
   const [text] = useTypewriter({
     words: [
-      'Capturing Life\'s Beautiful Moments',
-      'Professional Wedding Photography',
-      'Portrait & Event Photography',
-      'Creating Timeless Memories',
-      'From women with love to women'
-    ],
+      'From women with love to women' ],
     loop: true,
     delaySpeed: 2000,
   });
