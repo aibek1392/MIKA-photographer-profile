@@ -9,7 +9,8 @@ const Hero: React.FC = () => {
       'Capturing Life\'s Beautiful Moments',
       'Professional Wedding Photography',
       'Portrait & Event Photography',
-      'Creating Timeless Memories'
+      'Creating Timeless Memories',
+      'From women with love to women'
     ],
     loop: true,
     delaySpeed: 2000,

@@ -174,8 +174,13 @@ const Portfolio: React.FC = () => {
                   }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => openLightbox(index)}
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    openLightbox(index);
+                  }}
                   role="button"
                   tabIndex={0}
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();

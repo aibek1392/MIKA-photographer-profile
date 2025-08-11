@@ -69,7 +69,7 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     card.style.opacity = (1 - Math.min(Math.abs(deltaX) / 100, 1) * 0.75).toString();
   }, [getActiveCard]);
 
-  const handleImageClick = useCallback((imageSrc: string, e: React.MouseEvent) => {
+  const handleImageClick = useCallback((imageSrc: string, e: React.MouseEvent | React.TouchEvent) => {
     // Only open fullscreen if we're not in the middle of a swipe
     if (!isSwiping.current) {
       e.preventDefault();
@@ -236,7 +236,11 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
               className="w-full h-full object-cover select-none cursor-pointer"
               draggable={false}
               onClick={(e) => handleImageClick(imageList[originalIndex], e)}
-              style={{ pointerEvents: 'auto' }}
+              onTouchEnd={(e) => {
+                e.preventDefault();
+                handleImageClick(imageList[originalIndex], e);
+              }}
+              style={{ pointerEvents: 'auto', WebkitTapHighlightColor: 'transparent' }}
             />
           </article>
         ))}
@@ -250,6 +254,12 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={closeFullscreen}
+            onTouchEnd={(e) => {
+              if (e.target === e.currentTarget) {
+                e.preventDefault();
+                closeFullscreen();
+              }
+            }}
             className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
             style={{ backdropFilter: 'blur(10px)' }}
           >
@@ -259,7 +269,13 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
                 e.stopPropagation();
                 closeFullscreen();
               }}
+              onTouchEnd={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                closeFullscreen();
+              }}
               className="absolute top-4 right-4 z-10 w-12 h-12 bg-black/50 hover:bg-black/70 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-200"
+              style={{ WebkitTapHighlightColor: 'transparent' }}
               aria-label="Close"
             >
               <X className="w-6 h-6 text-white" />

@@ -51,9 +51,14 @@ export const ToggleGroupItem: React.FC<ToggleGroupItemProps> = ({
   return (
     <motion.button
       onClick={onClick}
+      onTouchEnd={(e) => {
+        e.preventDefault();
+        onClick?.();
+      }}
       className={`px-2 sm:px-4 py-2 rounded-md font-medium transition-all duration-300 text-xs sm:text-sm md:text-base flex-shrink-0 ${className}`}
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
+      style={{ WebkitTapHighlightColor: 'transparent' }}
     >
       <motion.div
         className={`relative px-2 sm:px-3 py-2 rounded-md transition-all duration-300 whitespace-nowrap ${
