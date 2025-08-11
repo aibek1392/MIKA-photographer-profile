@@ -37,8 +37,8 @@ const Contact: React.FC = () => {
     {
       icon: MapPin,
       title: 'Location',
-      value: '206 W 23rd St, New York, NY 10011',
-      link: 'https://maps.google.com/?q=206+W+23rd+St,+New+York,+NY+10011',
+      value: 'San Francisco, CA',
+        link: 'https://maps.google.com/?q=San+Francisco,+CA',
     },
   ];
 

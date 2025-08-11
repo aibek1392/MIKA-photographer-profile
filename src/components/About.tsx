@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Camera, Heart, Award, Users } from 'lucide-react';
+import InteractiveSelector from './InteractiveSelector';
 
 const About: React.FC = () => {
   const [ref, inView] = useInView({
@@ -60,20 +61,28 @@ const About: React.FC = () => {
               variants={itemVariants}
               className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
             >
-              Hi, I'm Mika! I'm a passionate photographer with over 8 years of experience 
-              capturing life's most precious moments. My journey began with a simple love 
-              for storytelling through images, and it has evolved into a career dedicated 
-              to creating timeless memories for couples, families, and individuals.
+              SERAIELEDIT is a creative project and team dedicated to elevating and amplifying your brand, personal photoshoot, proposal, maternity, love story, or wedding experience.
+            </motion.p>
+            
+            <motion.p
+              variants={itemVariants}
+              className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
+            >
+              Founded by Meruyert (Mika) Yerdauletova, who brings 8 years of professional experience, our team is passionate about capturing true beauty - real, alive, and authentic. Every photoshoot becomes a space of presence, quiet confidence, and gentle transformation.
+            </motion.p>
+
+            <motion.p
+              variants={itemVariants}
+              className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
+            >
+              Our work blends soulful storytelling with a refined editorial eye, creating warm, cinematic images where every detail feels alive and true.
             </motion.p>
             
             <motion.p
               variants={itemVariants}
               className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed"
             >
-              I specialize in wedding photography, portrait sessions, and event coverage. 
-              My approach combines artistic vision with technical expertise to deliver 
-              images that not only look beautiful but also tell your unique story. 
-              Every shoot is an opportunity to create something extraordinary.
+              We have photographed for Harper's Bazaar, worked at New York Fashion Week with designers such as Sergio Hudson and MUSA, Vlassi Holeva, Francisco Arce and continue to bring artistry to love stories, portraits, events, and brands.
             </motion.p>
 
             <motion.div
@@ -95,18 +104,10 @@ const About: React.FC = () => {
             </motion.div>
           </motion.div>
 
-          {/* Personal Photo */}
-          <motion.div
-            variants={itemVariants}
-            className="relative"
-          >
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-              <img
-                src="/photo_2025-07-25 13.56.42.jpeg"
-                alt="Mika - Professional Photographer"
-                className="w-full h-auto object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+          {/* Interactive selector of recent images */}
+          <motion.div variants={itemVariants} className="relative">
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-black p-4">
+              <InteractiveSelector />
             </div>
           </motion.div>
         </motion.div>
