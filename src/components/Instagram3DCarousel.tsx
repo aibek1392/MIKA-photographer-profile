@@ -301,15 +301,6 @@ const Instagram3DCarousel: React.FC<Instagram3DCarouselProps> = ({ images }) => 
           </motion.div>
         </motion.div>
       </motion.div>
-      
-      {/* Drag indicators */}
-      <div className="flex items-center justify-center gap-4 mt-2 text-gray-500">
-        <div className="flex items-center gap-2">
-          <ChevronLeft size={18} />
-          <span className="text-xs">Drag</span>
-          <ChevronRight size={18} />
-        </div>
-      </div>
     </motion.div>
   );
 };

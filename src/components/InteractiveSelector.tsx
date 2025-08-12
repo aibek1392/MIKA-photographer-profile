@@ -76,12 +76,9 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
   }, [getActiveCard]);
 
   const handleImageClick = useCallback((imageSrc: string, e: React.MouseEvent | React.TouchEvent) => {
-    // Only open fullscreen if we're not in the middle of a swipe
-    if (!isSwiping.current) {
-      e.preventDefault();
-      e.stopPropagation();
-      setFullscreenImage(imageSrc);
-    }
+    e.preventDefault();
+    e.stopPropagation();
+    setFullscreenImage(imageSrc);
   }, []);
 
   const closeFullscreen = useCallback(() => {
@@ -152,7 +149,7 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
 
     // Only trigger fullscreen if movement is minimal (not scrolling/swiping)
     // More lenient threshold for swiper interaction
-    if (deltaX < 20 && deltaY < 20) {
+    if (deltaX < 30 && deltaY < 30) {
       e.preventDefault();
       e.stopPropagation();
       setFullscreenImage(imageSrc);
@@ -346,10 +343,12 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
               onClick={(e) => handleImageClick(imageList[originalIndex], e)}
               onTouchStart={handleTouchStart}
               onTouchEnd={(e) => handleTouchEnd(imageList[originalIndex], e)}
+              onMouseDown={(e) => e.stopPropagation()}
               style={{ 
                 pointerEvents: 'auto', 
                 WebkitTapHighlightColor: 'transparent',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                touchAction: 'manipulation'
               }}
             >
               <img
@@ -461,7 +460,7 @@ export default function AboutImageGallery() {
       <div className='text-center'>
         {/* Header */}
         <div className="mb-4">
-          <h3 className="text-xl md:text-2xl font-bold text-white mb-1">
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-1">
           Harper's BAZAAR magazine work
           </h3>
         </div>
@@ -472,14 +471,6 @@ export default function AboutImageGallery() {
           cardHeight={380} 
           className="mx-auto"
         />
-
-        {/* Swipe indicators */}
-        <div className="flex items-center justify-center gap-4 mt-2 text-white/60">
-          <div className="flex items-center gap-2">
-            <ChevronLeft size={18} />
-            <ChevronRight size={18} />
-          </div>
-        </div>
       </div>
     </div>
   );

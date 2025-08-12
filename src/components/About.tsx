@@ -106,7 +106,7 @@ const About: React.FC = () => {
 
           {/* Interactive selector of recent images */}
           <motion.div variants={itemVariants} className="relative">
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-black p-4">
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl p-4">
               <InteractiveSelector />
             </div>
           </motion.div>
