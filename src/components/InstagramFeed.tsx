@@ -42,24 +42,24 @@ const InstagramFeed: React.FC = () => {
   ];
 
   return (
-    <section className="py-12 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
+    <section className="py-3 bg-white relative overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="text-center mb-8"
+          className="text-center"
         >
           <motion.h2 
             variants={itemVariants}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 text-white"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900"
           >
             Instagram Feed
           </motion.h2>
           <motion.p 
             variants={itemVariants}
-            className="text-lg text-gray-300 max-w-3xl mx-auto leading-relaxed"
+            className="text-lg text-gray-600 max-w-3xl mx-auto"
           >
             Follow my latest work and behind-the-scenes moments on Instagram. 
             Each image captures a unique story and showcases my passion for photography.

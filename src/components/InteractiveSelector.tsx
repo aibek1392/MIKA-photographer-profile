@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, X, Move } from 'lucide-react';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 
 interface ImageSwiperProps {
   images: string;
@@ -26,6 +26,12 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     Array.from({ length: imageList.length }, (_, i) => i)
   );
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
+  const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
+  const [showHint, setShowHint] = useState(true);
+  const [userInteracted, setUserInteracted] = useState(false);
+  const hintControls = useAnimation();
+  const arrowControls = useAnimation();
+  const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
 
   const getDurationFromCSS = useCallback((
     variableName: string,
@@ -82,6 +88,77 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     setFullscreenImage(null);
   }, []);
 
+  // Hint animation functions
+  const startHintAnimation = useCallback(async () => {
+    if (!showHint || userInteracted) return;
+
+    // Animate the card stack with subtle drag gesture
+    await hintControls.start({
+      x: [0, 15, -15, 0],
+      transition: {
+        duration: 2.5,
+        times: [0, 0.3, 0.7, 1],
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }
+    });
+
+    // Animate arrows
+    await arrowControls.start({
+      opacity: [0, 0.8, 0.8, 0],
+      x: [0, 5, -5, 0],
+      transition: {
+        duration: 2.5,
+        times: [0, 0.3, 0.7, 1],
+        ease: "easeInOut",
+      }
+    });
+  }, [showHint, userInteracted, hintControls, arrowControls]);
+
+  const stopHintAnimation = useCallback(() => {
+    setUserInteracted(true);
+    setShowHint(false);
+    hintControls.stop();
+    arrowControls.stop();
+    hintControls.set({ x: 0 });
+    arrowControls.set({ opacity: 0 });
+  }, [hintControls, arrowControls]);
+
+  const resetInactivityTimer = useCallback(() => {
+    if (inactivityTimer.current) {
+      clearTimeout(inactivityTimer.current);
+    }
+    
+    inactivityTimer.current = setTimeout(() => {
+      if (userInteracted) {
+        setShowHint(true);
+        setUserInteracted(false);
+      }
+    }, 5000);
+  }, [userInteracted]);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    setTouchStart({
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    });
+    stopHintAnimation();
+    resetInactivityTimer();
+  }, [stopHintAnimation, resetInactivityTimer]);
+
+  const handleTouchEnd = useCallback((imageSrc: string, e: React.TouchEvent) => {
+    // Calculate distance moved
+    const deltaX = Math.abs(e.changedTouches[0].clientX - touchStart.x);
+    const deltaY = Math.abs(e.changedTouches[0].clientY - touchStart.y);
+
+    // Only trigger fullscreen if movement is minimal (not scrolling/swiping)
+    // More lenient threshold for swiper interaction
+    if (deltaX < 20 && deltaY < 20) {
+      e.preventDefault();
+      e.stopPropagation();
+      setFullscreenImage(imageSrc);
+    }
+  }, [touchStart]);
+
   const handleStart = useCallback((clientX: number) => {
     if (isSwiping.current) return;
     isSwiping.current = true;
@@ -89,7 +166,9 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     currentX.current = clientX;
     const card = getActiveCard();
     if (card) card.style.transition = 'none';
-  }, [getActiveCard]);
+    stopHintAnimation();
+    resetInactivityTimer();
+  }, [getActiveCard, stopHintAnimation, resetInactivityTimer]);
 
   const handleEnd = useCallback(() => {
     if (!isSwiping.current) return;
@@ -195,11 +274,43 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     }
   }, [fullscreenImage, closeFullscreen]);
 
+  // Start hint animation on mount and after inactivity
+  useEffect(() => {
+    if (showHint && !userInteracted) {
+      const timer = setTimeout(() => {
+        startHintAnimation();
+      }, 1500); // Start after 1.5s on load
+
+      return () => clearTimeout(timer);
+    }
+  }, [showHint, userInteracted, startHintAnimation]);
+
+  // Loop hint animation
+  useEffect(() => {
+    if (!showHint || userInteracted) return;
+
+    const interval = setInterval(() => {
+      startHintAnimation();
+    }, 6000); // Repeat every 6 seconds
+
+    return () => clearInterval(interval);
+  }, [showHint, userInteracted, startHintAnimation]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (inactivityTimer.current) {
+        clearTimeout(inactivityTimer.current);
+      }
+    };
+  }, []);
+
   return (
     <>
-      <section
+      <motion.section
         className={`relative grid place-content-center select-none ${className}`}
         ref={cardStackRef}
+        animate={hintControls}
         style={{
           width: cardWidth + 32,
           height: cardHeight + 32,
@@ -230,21 +341,65 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
                          rotateY(var(--swipe-rotate, 0deg))`
             } as React.CSSProperties}
           >
-            <img
-              src={imageList[originalIndex]}
-              alt={`Editorial photo ${originalIndex + 1}`}
-              className="w-full h-full object-cover select-none cursor-pointer"
-              draggable={false}
+            <div
+              className="w-full h-full"
               onClick={(e) => handleImageClick(imageList[originalIndex], e)}
-              onTouchEnd={(e) => {
-                e.preventDefault();
-                handleImageClick(imageList[originalIndex], e);
+              onTouchStart={handleTouchStart}
+              onTouchEnd={(e) => handleTouchEnd(imageList[originalIndex], e)}
+              style={{ 
+                pointerEvents: 'auto', 
+                WebkitTapHighlightColor: 'transparent',
+                cursor: 'pointer'
               }}
-              style={{ pointerEvents: 'auto', WebkitTapHighlightColor: 'transparent' }}
-            />
+            >
+              <img
+                src={imageList[originalIndex]}
+                alt={`Editorial photo ${originalIndex + 1}`}
+                className="w-full h-full object-cover select-none pointer-events-none"
+                draggable={false}
+              />
+            </div>
           </article>
         ))}
-      </section>
+        
+        {/* Animated Hint Arrows */}
+        <motion.div
+          animate={arrowControls}
+          className="absolute inset-0 flex items-center justify-between pointer-events-none z-10"
+          style={{ opacity: 0 }}
+        >
+          {/* Left Arrow */}
+          <motion.div
+            className="flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full shadow-lg"
+            style={{ marginLeft: '-20px' }}
+          >
+            <ChevronLeft className="w-6 h-6 text-white" />
+          </motion.div>
+          
+          {/* Swipe Icon Center */}
+          <motion.div
+            className="flex items-center justify-center w-14 h-14 bg-white/20 backdrop-blur-sm rounded-full shadow-lg"
+            animate={{
+              scale: [1, 1.1, 1],
+              transition: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
+          >
+            <Move className="w-6 h-6 text-white" />
+          </motion.div>
+          
+          {/* Right Arrow */}
+          <motion.div
+            className="flex items-center justify-center w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full shadow-lg"
+            style={{ marginRight: '-20px' }}
+          >
+            <ChevronRight className="w-6 h-6 text-white" />
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
       {/* Fullscreen Modal */}
       <AnimatePresence>

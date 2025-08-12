@@ -13,6 +13,7 @@ const Portfolio: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [touchStart, setTouchStart] = useState({ x: 0, y: 0 });
 
   const images = [
     // Latest editorial images first
@@ -72,6 +73,26 @@ const Portfolio: React.FC = () => {
 
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart({
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+    });
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent, index: number) => {
+    // Calculate distance moved
+    const deltaX = Math.abs(e.changedTouches[0].clientX - touchStart.x);
+    const deltaY = Math.abs(e.changedTouches[0].clientY - touchStart.y);
+
+    // Only trigger click if movement is minimal (not scrolling)
+    // Allow for small movements (< 10px) to account for natural finger movement
+    if (deltaX < 10 && deltaY < 10) {
+      e.preventDefault();
+      openLightbox(index);
+    }
   };
 
   const openLightbox = (index: number) => {
@@ -174,10 +195,8 @@ const Portfolio: React.FC = () => {
                   }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => openLightbox(index)}
-                  onTouchEnd={(e) => {
-                    e.preventDefault();
-                    openLightbox(index);
-                  }}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={(e) => handleTouchEnd(e, index)}
                   role="button"
                   tabIndex={0}
                   style={{ WebkitTapHighlightColor: 'transparent' }}

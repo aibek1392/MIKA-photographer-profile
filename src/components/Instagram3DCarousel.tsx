@@ -1,6 +1,6 @@
-import React, { memo, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import React, { memo, useEffect, useLayoutEffect, useMemo, useState, useRef, useCallback } from 'react';
 import { AnimatePresence, motion, useAnimation, useMotionValue, useTransform } from 'framer-motion';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Move } from 'lucide-react';
 
 // Hook that works on SSR/CSR
 export const useIsomorphicLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect;
@@ -108,7 +108,12 @@ type Instagram3DCarouselProps = {
 const Instagram3DCarousel: React.FC<Instagram3DCarouselProps> = ({ images }) => {
   const [activeImg, setActiveImg] = useState<string | null>(null);
   const [isCarouselActive, setIsCarouselActive] = useState(true);
+  const [showHint, setShowHint] = useState(true);
+  const [userInteracted, setUserInteracted] = useState(false);
   const controls = useAnimation();
+  const hintControls = useAnimation();
+  const arrowControls = useAnimation();
+  const inactivityTimer = useRef<NodeJS.Timeout | null>(null);
 
   const cards = useMemo(() => images, [images]);
 
@@ -126,6 +131,90 @@ const Instagram3DCarousel: React.FC<Instagram3DCarouselProps> = ({ images }) => 
     setActiveImg(null);
     setIsCarouselActive(true);
   };
+
+  // Hint animation functions
+  const startHintAnimation = useCallback(async () => {
+    if (!showHint || userInteracted) return;
+
+    // Animate the carousel with subtle drag gesture
+    await hintControls.start({
+      x: [0, 20, -20, 0],
+      transition: {
+        duration: 3,
+        times: [0, 0.3, 0.7, 1],
+        ease: [0.25, 0.46, 0.45, 0.94],
+      }
+    });
+
+    // Animate arrows
+    await arrowControls.start({
+      opacity: [0, 0.8, 0.8, 0],
+      x: [0, 8, -8, 0],
+      transition: {
+        duration: 3,
+        times: [0, 0.3, 0.7, 1],
+        ease: "easeInOut",
+      }
+    });
+  }, [showHint, userInteracted, hintControls, arrowControls]);
+
+  const stopHintAnimation = useCallback(() => {
+    setUserInteracted(true);
+    setShowHint(false);
+    hintControls.stop();
+    arrowControls.stop();
+    hintControls.set({ x: 0 });
+    arrowControls.set({ opacity: 0 });
+  }, [hintControls, arrowControls]);
+
+  const resetInactivityTimer = useCallback(() => {
+    if (inactivityTimer.current) {
+      clearTimeout(inactivityTimer.current);
+    }
+    
+    inactivityTimer.current = setTimeout(() => {
+      if (userInteracted) {
+        setShowHint(true);
+        setUserInteracted(false);
+      }
+    }, 5000);
+  }, [userInteracted]);
+
+  const handleInteraction = useCallback(() => {
+    stopHintAnimation();
+    resetInactivityTimer();
+  }, [stopHintAnimation, resetInactivityTimer]);
+
+  // Start hint animation on mount and after inactivity
+  useEffect(() => {
+    if (showHint && !userInteracted) {
+      const timer = setTimeout(() => {
+        startHintAnimation();
+      }, 2000); // Start after 2s on load
+
+      return () => clearTimeout(timer);
+    }
+  }, [showHint, userInteracted, startHintAnimation]);
+
+  // Loop hint animation
+  useEffect(() => {
+    if (!showHint || userInteracted) return;
+
+    const interval = setInterval(() => {
+      startHintAnimation();
+    }, 8000); // Repeat every 8 seconds
+
+    return () => clearInterval(interval);
+  }, [showHint, userInteracted, startHintAnimation]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (inactivityTimer.current) {
+        clearTimeout(inactivityTimer.current);
+      }
+    };
+  }, []);
 
   return (
     <motion.div layout className="relative">
@@ -166,12 +255,55 @@ const Instagram3DCarousel: React.FC<Instagram3DCarouselProps> = ({ images }) => 
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="relative h-[550px] w-full overflow-hidden">
+      <motion.div 
+        className="relative h-[550px] w-full overflow-hidden"
+        animate={hintControls}
+        onMouseDown={handleInteraction}
+        onTouchStart={handleInteraction}
+      >
         <Carousel handleClick={handleClick} controls={controls} cards={cards} isCarouselActive={isCarouselActive} />
-      </div>
+        
+        {/* Animated Hint Arrows */}
+        <motion.div
+          animate={arrowControls}
+          className="absolute inset-0 flex items-center justify-between pointer-events-none z-10 px-8"
+          style={{ opacity: 0 }}
+        >
+          {/* Left Arrow */}
+          <motion.div
+            className="flex items-center justify-center w-16 h-16 bg-white/15 backdrop-blur-md rounded-full shadow-xl border border-white/20"
+            style={{ marginLeft: '-30px' }}
+          >
+            <ChevronLeft className="w-8 h-8 text-white drop-shadow-lg" />
+          </motion.div>
+          
+          {/* Swipe Icon Center */}
+          <motion.div
+            className="flex items-center justify-center w-20 h-20 bg-white/15 backdrop-blur-md rounded-full shadow-xl border border-white/20"
+            animate={{
+              scale: [1, 1.15, 1],
+              transition: {
+                duration: 2.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
+          >
+            <Move className="w-8 h-8 text-white drop-shadow-lg" />
+          </motion.div>
+          
+          {/* Right Arrow */}
+          <motion.div
+            className="flex items-center justify-center w-16 h-16 bg-white/15 backdrop-blur-md rounded-full shadow-xl border border-white/20"
+            style={{ marginRight: '-30px' }}
+          >
+            <ChevronRight className="w-8 h-8 text-white drop-shadow-lg" />
+          </motion.div>
+        </motion.div>
+      </motion.div>
       
       {/* Drag indicators */}
-      <div className="flex items-center justify-center gap-4 mt-2 text-white/60">
+      <div className="flex items-center justify-center gap-4 mt-2 text-gray-500">
         <div className="flex items-center gap-2">
           <ChevronLeft size={18} />
           <span className="text-xs">Drag</span>
