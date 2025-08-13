@@ -162,7 +162,7 @@ const Footer: React.FC = () => {
                     href="https://www.instagram.com/aiba_10/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white hover:text-gray-300 transition-colors duration-300"
+                    className="text-red-500 hover:text-red-400 transition-colors duration-300"
                     aria-label="Aibek's Instagram"
                   >
                     <Instagram className="w-5 h-5 drop-shadow-lg" />
