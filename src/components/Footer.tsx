@@ -23,6 +23,7 @@ const Footer: React.FC = () => {
   const quickLinks = [
     { href: '#home', label: 'Home' },
     { href: '#about', label: 'About' },
+    { href: '#pricing', label: 'Pricing' },
     { href: '#portfolio', label: 'Portfolio' },
     { href: '#contact', label: 'Contact' },
   ];
@@ -31,7 +32,7 @@ const Footer: React.FC = () => {
     <footer className="bg-black dark:bg-gray-900 text-white">
       <div className="container-custom">
         <div className="py-12 lg:py-16">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 text-center">
             {/* Brand Section */}
             <div className="lg:col-span-2">
               <motion.div
@@ -56,18 +57,7 @@ const Footer: React.FC = () => {
                   Capturing life's most precious moments with creativity, passion, and 
                   artistic vision. Let me tell your story through the lens of my camera.
                 </p>
-                
-                {/* Contact Info */}
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3 text-gray-300">
-                    <Mail className="w-5 h-5" />
-                    <span>hello@mikaphotography.com</span>
-                  </div>
-                  <div className="flex items-center space-x-3 text-gray-300">
-                    <Phone className="w-5 h-5" />
-                    <span>480-784-7840</span>
-                  </div>
-                </div>
+                                
               </motion.div>
             </div>
 
@@ -77,6 +67,7 @@ const Footer: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
               viewport={{ once: true }}
+              className="text-center"
             >
               <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
               <ul className="space-y-3">
@@ -99,6 +90,7 @@ const Footer: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
+              className="text-center"
             >
               <h4 className="text-lg font-semibold mb-4">Services</h4>
               <ul className="space-y-3">
@@ -162,6 +154,20 @@ const Footer: React.FC = () => {
                 <p className="text-gray-500 text-xs mt-1">
                   Made with ❤️ for capturing beautiful moments
                 </p>
+                <div className="flex items-center justify-center md:justify-end gap-2 mt-1">
+                  <p className="text-gray-500 text-xs">
+                    Created by Aibek
+                  </p>
+                  <a
+                    href="https://www.instagram.com/aiba_10/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white hover:text-gray-300 transition-colors duration-300"
+                    aria-label="Aibek's Instagram"
+                  >
+                    <Instagram className="w-5 h-5 drop-shadow-lg" />
+                  </a>
+                </div>
               </div>
             </div>
           </motion.div>

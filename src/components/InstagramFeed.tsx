@@ -42,7 +42,7 @@ const InstagramFeed: React.FC = () => {
   ];
 
   return (
-    <section className="py-3 bg-white relative overflow-hidden">
+    <section className="py-3 bg-white dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-black relative overflow-hidden">
       <div className="container mx-auto px-4">
         <motion.div
           ref={ref}
@@ -53,13 +53,13 @@ const InstagramFeed: React.FC = () => {
         >
           <motion.h2 
             variants={itemVariants}
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white"
           >
             Instagram Feed
           </motion.h2>
           <motion.p 
             variants={itemVariants}
-            className="text-lg text-gray-600 max-w-3xl mx-auto"
+            className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto"
           >
             Follow my latest work and behind-the-scenes moments on Instagram. 
             Each image captures a unique story and showcases my passion for photography.

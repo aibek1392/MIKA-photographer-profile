@@ -184,29 +184,29 @@ const HoverSliderContent: React.FC<{ packages: any[] }> = ({ packages }) => {
           transition={{ duration: 0.5, ease: "easeOut" }}
           className={activeSlide === index ? "block" : "absolute inset-0 pointer-events-none"}
         >
-          <div className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white mb-4 lg:mb-8 text-center">
+          <div className="text-2xl sm:text-3xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 lg:mb-8 text-center">
             {pkg.price}
           </div>
-          <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-6">
+          <h4 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 dark:text-white mb-3 lg:mb-6">
             WHAT DO YOU GET?
           </h4>
           <ul className="space-y-2 lg:space-y-3 mb-4 lg:mb-8">
             {pkg.details.map((detail: string, detailIndex: number) => (
-              <li key={detailIndex} className="flex items-start text-gray-300">
-                <span className="text-white mr-2 lg:mr-3">•</span>
+              <li key={detailIndex} className="flex items-start text-gray-700 dark:text-gray-300">
+                <span className="text-gray-900 dark:text-white mr-2 lg:mr-3">•</span>
                 <span className="text-sm lg:text-base leading-relaxed">{detail}</span>
               </li>
             ))}
           </ul>
           
-          <div className="border-t border-gray-600 pt-3 lg:pt-6 space-y-2 lg:space-y-3">
-            <p className="text-xs lg:text-sm text-gray-400 italic">
+          <div className="border-t border-gray-400 dark:border-gray-600 pt-3 lg:pt-6 space-y-2 lg:space-y-3 text-center">
+            <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400 italic">
               Studio rental not included in the price
             </p>
-            <p className="text-xs lg:text-sm text-gray-400">
+            <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">
               The average studio price ranges from $50 to $100 per hour.
             </p>
-            <p className="text-xs lg:text-sm text-gray-400">
+            <p className="text-xs lg:text-sm text-gray-600 dark:text-gray-400">
               Booking of dates and times is confirmed upon a $100 advance payment.
             </p>
           </div>
@@ -272,7 +272,7 @@ export default function Pricing() {
     <section 
       id="pricing"
       ref={ref}
-      className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden"
+      className="py-20 bg-white dark:bg-gray-900 relative overflow-hidden"
     >
       {/* Background decoration */}
       <div className="absolute inset-0 opacity-10">
@@ -292,7 +292,7 @@ export default function Pricing() {
           transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-white">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white">
             Pricing
           </h2>
         </motion.div>
@@ -309,7 +309,7 @@ export default function Pricing() {
             <div className="flex lg:flex-col lg:space-y-12 space-x-4 lg:space-x-0 justify-center lg:justify-start">
               {packages.map((pkg, index) => (
                 <div key={pkg.name} className="text-center lg:text-left">
-                  <h3 className="text-2xl sm:text-3xl lg:text-6xl font-bold text-white">
+                  <h3 className="text-2xl sm:text-3xl lg:text-6xl font-bold text-gray-900 dark:text-white">
                     <TextStaggerHover 
                       text={pkg.name} 
                       index={index}
@@ -337,7 +337,7 @@ export default function Pricing() {
               </div>
 
               {/* Content Container */}
-              <div className="relative z-10 bg-black/60 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-12 border border-gray-700">
+              <div className="relative z-10 bg-gray-100/80 dark:bg-black/60 backdrop-blur-sm rounded-2xl p-4 sm:p-6 lg:p-12 border border-gray-300 dark:border-gray-700">
                 <HoverSliderContent packages={packages} />
               </div>
             </div>

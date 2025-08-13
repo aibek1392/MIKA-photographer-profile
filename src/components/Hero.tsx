@@ -103,7 +103,7 @@ const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-lg sm:text-xl text-gray-200 mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg sm:text-xl text-gray-200 mb-12 max-w-2xl mx-auto leading-relaxed text-center"
           >
             Professional photographer specializing in weddings, portraits, and events. 
             Let me capture your special moments with creativity and passion.

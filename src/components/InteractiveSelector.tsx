@@ -81,6 +81,10 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     setFullscreenImage(imageSrc);
   }, []);
 
+  const handleImageTap = useCallback((imageSrc: string) => {
+    setFullscreenImage(imageSrc);
+  }, []);
+
   const closeFullscreen = useCallback(() => {
     setFullscreenImage(null);
   }, []);
@@ -149,7 +153,7 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
 
     // Only trigger fullscreen if movement is minimal (not scrolling/swiping)
     // More lenient threshold for swiper interaction
-    if (deltaX < 30 && deltaY < 30) {
+    if (deltaX < 50 && deltaY < 50) {
       e.preventDefault();
       e.stopPropagation();
       setFullscreenImage(imageSrc);
@@ -343,12 +347,16 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
               onClick={(e) => handleImageClick(imageList[originalIndex], e)}
               onTouchStart={handleTouchStart}
               onTouchEnd={(e) => handleTouchEnd(imageList[originalIndex], e)}
+              onTouchMove={(e) => e.preventDefault()}
               onMouseDown={(e) => e.stopPropagation()}
+              onTouchStartCapture={(e) => e.stopPropagation()}
               style={{ 
                 pointerEvents: 'auto', 
                 WebkitTapHighlightColor: 'transparent',
                 cursor: 'pointer',
-                touchAction: 'manipulation'
+                touchAction: 'none',
+                userSelect: 'none',
+                WebkitUserSelect: 'none'
               }}
             >
               <img
