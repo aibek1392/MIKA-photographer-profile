@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter, Cursor } from 'react-simple-typewriter';
 import { ChevronDown } from 'lucide-react';
@@ -22,6 +22,26 @@ const Hero: React.FC = () => {
 
 
 
+  const backgroundRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (backgroundRef.current) {
+        const scrolled = window.pageYOffset;
+        const heroHeight = window.innerHeight;
+        
+        // Only apply parallax within the hero section
+        if (scrolled < heroHeight) {
+          // Background moves slower than scroll (true parallax)
+          const rate = scrolled * 0.5;
+          backgroundRef.current.style.transform = `translateY(${rate}px)`;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
@@ -29,11 +49,17 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Fixed Parallax Background Image */}
+      {/* Parallax Background Image */}
       <div 
-        className="parallax-bg"
+        ref={backgroundRef}
+        className="absolute w-full h-[120vh]"
         style={{
           backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center 20%',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed', // ⭐️ This is the key
+          top: '-10vh',
           zIndex: 0,
         }}
       >
