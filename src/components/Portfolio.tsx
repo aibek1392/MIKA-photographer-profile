@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { ToggleGroup, ToggleGroupItem } from './ToggleGroup';
@@ -102,13 +102,13 @@ const Portfolio: React.FC = () => {
 
   const closeLightbox = () => setIsLightboxOpen(false);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setActiveIndex(prev => (prev + 1) % filteredImages.length);
-  };
+  }, [filteredImages.length]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setActiveIndex(prev => (prev - 1 + filteredImages.length) % filteredImages.length);
-  };
+  }, [filteredImages.length]);
 
   useEffect(() => {
     if (!isLightboxOpen) return;
@@ -119,7 +119,7 @@ const Portfolio: React.FC = () => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isLightboxOpen, filteredImages.length]);
+  }, [isLightboxOpen, goToNext, goToPrevious]);
 
   return (
     <section id="portfolio" className="section-padding bg-white dark:bg-gray-900">

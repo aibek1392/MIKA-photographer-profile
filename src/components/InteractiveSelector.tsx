@@ -81,10 +81,6 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
     setFullscreenImage(imageSrc);
   }, []);
 
-  const handleImageTap = useCallback((imageSrc: string) => {
-    setFullscreenImage(imageSrc);
-  }, []);
-
   const closeFullscreen = useCallback(() => {
     setFullscreenImage(null);
   }, []);
@@ -361,7 +357,7 @@ export const ImageSwiper: React.FC<ImageSwiperProps> = ({
             >
               <img
                 src={imageList[originalIndex]}
-                alt={`Editorial photo ${originalIndex + 1}`}
+                alt={`Editorial ${originalIndex + 1}`}
                 className="w-full h-full object-cover select-none pointer-events-none"
                 draggable={false}
               />
