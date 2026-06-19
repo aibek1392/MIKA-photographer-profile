@@ -25,28 +25,17 @@ const Hero: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
     const handleScroll = () => {
       if (!backgroundRef.current) return;
 
+      // The image stays perfectly still (position: fixed, no transform).
+      // Instead we clip it away from the bottom as the page scrolls, so the
+      // next section is revealed exactly as the hero scrolls off — the same
+      // clipping behaviour as background-attachment: fixed, but mobile-safe.
       const scrolled = window.scrollY;
       const heroHeight = window.innerHeight;
-
-      if (scrolled < heroHeight) {
-        backgroundRef.current.style.visibility = 'visible';
-        if (prefersReducedMotion) {
-          backgroundRef.current.style.transform = 'translate3d(0, 0, 0)';
-        } else {
-          // Move the fixed layer UP slower than the page so it drifts with
-          // (not against) the scroll. Factor stays within the layer's buffer
-          // (top:-20vh, h:140vh) so no gap appears at the edges.
-          const rate = scrolled * 0.2;
-          backgroundRef.current.style.transform = `translate3d(0, ${-rate}px, 0)`;
-        }
-      } else {
-        backgroundRef.current.style.visibility = 'hidden';
-      }
+      const clip = Math.min(Math.max(scrolled, 0), heroHeight);
+      backgroundRef.current.style.clipPath = `inset(0px 0px ${clip}px 0px)`;
     };
 
     handleScroll();
@@ -60,11 +49,13 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Parallax Background — position:fixed works on mobile (background-attachment:fixed does not) */}
+      {/* Fixed hero background — stays still while content scrolls over it.
+          position:fixed works on mobile (background-attachment:fixed does not);
+          clip-path reveals the next section without overlap. */}
       <div
         ref={backgroundRef}
-        className="hero-parallax-bg fixed left-0 w-full h-[140vh] pointer-events-none will-change-transform"
-        style={{ top: '-20vh', zIndex: 0 }}
+        className="hero-parallax-bg fixed top-0 left-0 w-full h-screen overflow-hidden pointer-events-none"
+        style={{ zIndex: 0, willChange: 'clip-path' }}
         aria-hidden="true"
       >
         <img

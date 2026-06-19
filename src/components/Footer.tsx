@@ -159,7 +159,7 @@ const Footer: React.FC = () => {
                     Created by Aibek
                   </p>
                   <a
-                    href="https://www.instagram.com/aiba_10/"
+                    href="https://www.instagram.com/aiba_nyc/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-red-500 hover:text-red-400 transition-colors duration-300"
