@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { useTypewriter, Cursor } from 'react-simple-typewriter';
 import { ChevronDown } from 'lucide-react';
@@ -22,40 +22,19 @@ const Hero: React.FC = () => {
 
 
 
-  const backgroundRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!backgroundRef.current) return;
-
-      // The image stays perfectly still (position: fixed, no transform).
-      // Instead we clip it away from the bottom as the page scrolls, so the
-      // next section is revealed exactly as the hero scrolls off — the same
-      // clipping behaviour as background-attachment: fixed, but mobile-safe.
-      const scrolled = window.scrollY;
-      const heroHeight = window.innerHeight;
-      const clip = Math.min(Math.max(scrolled, 0), heroHeight);
-      backgroundRef.current.style.clipPath = `inset(0px 0px ${clip}px 0px)`;
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   const scrollToAbout = () => {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section id="home" className="relative h-screen overflow-hidden">
+    <section id="home" className="relative h-screen">
       {/* Fixed hero background — stays still while content scrolls over it.
-          position:fixed works on mobile (background-attachment:fixed does not);
-          clip-path reveals the next section without overlap. */}
+          position:fixed works on mobile (background-attachment:fixed does not).
+          The sections below sit in an opaque z-10 layer, so they cover this
+          image as they scroll over it — no JS, no overlap, no peeking. */}
       <div
-        ref={backgroundRef}
         className="hero-parallax-bg fixed top-0 left-0 w-full h-screen overflow-hidden pointer-events-none"
-        style={{ zIndex: 0, willChange: 'clip-path' }}
+        style={{ zIndex: 0 }}
         aria-hidden="true"
       >
         <img

@@ -42,15 +42,19 @@ function App() {
       {/* Main Content */}
       <main>
         <Hero />
-        <About />
-        <Pricing />
-        <Portfolio />
-        <InstagramFeed />
-        <Contact />
-      </main>
+        {/* Opaque layer above the fixed hero background so these sections
+            cover the image as they scroll over it. */}
+        <div className="relative z-10 bg-white dark:bg-gray-900">
+          <About />
+          <Pricing />
+          <Portfolio />
+          <InstagramFeed />
+          <Contact />
 
-      {/* Footer */}
-      <Footer />
+          {/* Footer */}
+          <Footer />
+        </div>
+      </main>
     </div>
   );
 }
