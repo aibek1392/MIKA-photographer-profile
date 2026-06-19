@@ -38,8 +38,11 @@ const Hero: React.FC = () => {
         if (prefersReducedMotion) {
           backgroundRef.current.style.transform = 'translate3d(0, 0, 0)';
         } else {
-          const rate = scrolled * 0.5;
-          backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
+          // Move the fixed layer UP slower than the page so it drifts with
+          // (not against) the scroll. Factor stays within the layer's buffer
+          // (top:-20vh, h:140vh) so no gap appears at the edges.
+          const rate = scrolled * 0.2;
+          backgroundRef.current.style.transform = `translate3d(0, ${-rate}px, 0)`;
         }
       } else {
         backgroundRef.current.style.visibility = 'hidden';
@@ -60,8 +63,8 @@ const Hero: React.FC = () => {
       {/* Parallax Background — position:fixed works on mobile (background-attachment:fixed does not) */}
       <div
         ref={backgroundRef}
-        className="hero-parallax-bg fixed left-0 w-full h-[120vh] pointer-events-none will-change-transform"
-        style={{ top: '-10vh', zIndex: 0 }}
+        className="hero-parallax-bg fixed left-0 w-full h-[140vh] pointer-events-none will-change-transform"
+        style={{ top: '-20vh', zIndex: 0 }}
         aria-hidden="true"
       >
         <img
