@@ -99,20 +99,15 @@
     }
   }
 
-  /* Fixed background optimization */
-  #home div[style*="background-image"] {
+  /* Hero parallax background — fixed layer with GPU-accelerated transform */
+  .hero-parallax-bg {
     backface-visibility: hidden;
-    perspective: 1000px;
+    -webkit-backface-visibility: hidden;
   }
 
-  /* Ensure no white gaps on mobile */
-  @media (max-width: 768px) {
-    #home div[style*="background-attachment"] {
-      background-attachment: scroll !important;
-      background-size: cover !important;
-      background-position: center 25% !important;
-      min-height: 100vh !important;
-    }
+  .hero-parallax-bg img {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   /* Progressive enhancement - disable for reduced motion */

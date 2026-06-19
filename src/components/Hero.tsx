@@ -25,20 +25,28 @@ const Hero: React.FC = () => {
   const backgroundRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     const handleScroll = () => {
-      if (backgroundRef.current) {
-        const scrolled = window.pageYOffset;
-        const heroHeight = window.innerHeight;
-        
-        // Only apply parallax within the hero section
-        if (scrolled < heroHeight) {
-          // Background moves slower than scroll (true parallax)
+      if (!backgroundRef.current) return;
+
+      const scrolled = window.scrollY;
+      const heroHeight = window.innerHeight;
+
+      if (scrolled < heroHeight) {
+        backgroundRef.current.style.visibility = 'visible';
+        if (prefersReducedMotion) {
+          backgroundRef.current.style.transform = 'translate3d(0, 0, 0)';
+        } else {
           const rate = scrolled * 0.5;
-          backgroundRef.current.style.transform = `translateY(${rate}px)`;
+          backgroundRef.current.style.transform = `translate3d(0, ${rate}px, 0)`;
         }
+      } else {
+        backgroundRef.current.style.visibility = 'hidden';
       }
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -49,22 +57,20 @@ const Hero: React.FC = () => {
 
   return (
     <section id="home" className="relative h-screen overflow-hidden">
-      {/* Parallax Background Image */}
-      <div 
+      {/* Parallax Background — position:fixed works on mobile (background-attachment:fixed does not) */}
+      <div
         ref={backgroundRef}
-        className="absolute w-full h-[120vh]"
-        style={{
-          backgroundImage: `url('/photo_2025-07-25 13.56.46.jpeg')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 20%',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed', // ⭐️ This is the key
-          top: '-10vh',
-          zIndex: 0,
-        }}
+        className="hero-parallax-bg fixed left-0 w-full h-[120vh] pointer-events-none will-change-transform"
+        style={{ top: '-10vh', zIndex: 0 }}
+        aria-hidden="true"
       >
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-black/40 dark:bg-black/60"></div>
+        <img
+          src="/photo_2025-07-25 13.56.46.jpeg"
+          alt=""
+          className="w-full h-full object-cover"
+          style={{ objectPosition: 'center 20%' }}
+        />
+        <div className="absolute inset-0 bg-black/40 dark:bg-black/60" />
       </div>
 
       {/* Content */}
