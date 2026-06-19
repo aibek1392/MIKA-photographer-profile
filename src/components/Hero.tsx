@@ -104,7 +104,9 @@ const Hero: React.FC = () => {
               View Portfolio
             </motion.a>
             <motion.a
-              href="#contact"
+              href="https://wa.me/14807847840?text=Hi%20Mika!%20I'm%20interested%20in%20your%20photography%20services.%20Could%20you%20tell%20me%20more%20about%20your%20packages?"
+              target="_blank"
+              rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="btn-secondary"

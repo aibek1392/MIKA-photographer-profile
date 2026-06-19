@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon } from 'lucide-react';
+import { ContactIconRow } from './ContactMenu';
 
 const Navigation: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -34,7 +35,6 @@ const Navigation: React.FC = () => {
     { href: '#about', label: 'About' },
     { href: '#pricing', label: 'Pricing' },
     { href: '#portfolio', label: 'Portfolio' },
-    { href: '#contact', label: 'Contact' },
   ];
 
   const toggleMobileMenu = () => {
@@ -113,8 +113,9 @@ const Navigation: React.FC = () => {
             ))}
           </div>
 
-          {/* Right: Theme Toggle Button */}
-          <div className="flex items-center">
+          {/* Right: Contact icons (desktop) + Theme Toggle Button */}
+          <div className="flex items-center gap-3">
+            <ContactIconRow className="hidden lg:flex" />
             <button
               onClick={toggleDarkMode}
               className="w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 border border-gray-200 dark:border-gray-600 flex items-center justify-center"

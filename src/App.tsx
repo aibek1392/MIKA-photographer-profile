@@ -4,7 +4,7 @@ import About from './components/About';
 import Pricing from './components/Pricing';
 import Portfolio from './components/Portfolio';
 import InstagramFeed from './components/InstagramFeed';
-import Contact from './components/Contact';
+import ContactMenu from './components/ContactMenu';
 import Footer from './components/Footer';
 import Navigation from './components/Navigation';
 
@@ -49,12 +49,14 @@ function App() {
           <Pricing />
           <Portfolio />
           <InstagramFeed />
-          <Contact />
 
           {/* Footer */}
           <Footer />
         </div>
       </main>
+
+      {/* Floating contact menu (replaces the old Get In Touch section) */}
+      <ContactMenu />
     </div>
   );
 }
